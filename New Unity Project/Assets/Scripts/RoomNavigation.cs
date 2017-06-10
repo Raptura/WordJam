@@ -6,10 +6,10 @@ public class RoomNavigation : MonoBehaviour
 {
 
     public Map currentMap;
-    public Room currentRoom;
+    public MapNode currentRoom;
 
 
-    Dictionary<Exit.ExitDir, Room> exitDictionary = new Dictionary<Exit.ExitDir, Room>();
+    Dictionary<Corridor.Direction, Corridor> exitDictionary = new Dictionary<Corridor.Direction, Corridor>();
     GameController controller;
 
     void Awake()
@@ -21,20 +21,27 @@ public class RoomNavigation : MonoBehaviour
     {
         for (int i = 0; i < currentRoom.exits.Length; i++)
         {
-            exitDictionary.Add(currentRoom.exits[i].exitDirection, currentRoom.exits[i].roomToEnter);
+            exitDictionary.Add(currentRoom.exits[i].exitDirection, currentRoom.exits[i]);
             controller.interactionDescriptionsInRoom.Add(currentRoom.exits[i].exitDescription);
         }
     }
 
     public void AttemptToChangeRooms(string directionNoun)
     {
-        Exit.ExitDir dir = parseDirection(directionNoun);
+        Corridor.Direction dir = parseDirection(directionNoun);
 
         if (exitDictionary.ContainsKey(dir))
         {
-            currentRoom = exitDictionary[dir];
-            controller.message("You head off to the " + directionNoun);
-            controller.DisplayRoomText();
+            if (exitDictionary[dir].isBlocked)
+            {
+                controller.message("This route seems blocked...");
+            }
+            else
+            {
+                currentRoom = exitDictionary[dir].roomToEnter;
+                controller.message("You head off to the " + directionNoun);
+                controller.DisplayRoomText();
+            }
         }
         else
         {
@@ -48,8 +55,7 @@ public class RoomNavigation : MonoBehaviour
         exitDictionary.Clear();
     }
 
-
-    public Exit.ExitDir parseDirection(string noun)
+    public Corridor.Direction parseDirection(string noun)
     {
         string nounLower = noun.ToLower();
         switch (nounLower)
@@ -57,19 +63,19 @@ public class RoomNavigation : MonoBehaviour
             case "north":
             case "forward":
             case "up":
-                return Exit.ExitDir.North;
+                return Corridor.Direction.North;
             case "south":
             case "back":
             case "down":
-                return Exit.ExitDir.South;
+                return Corridor.Direction.South;
             case "east":
             case "left":
-                return Exit.ExitDir.East;
+                return Corridor.Direction.East;
             case "west":
             case "right":
-                return Exit.ExitDir.West;
+                return Corridor.Direction.West;
             default:
-                return Exit.ExitDir.None;
+                return Corridor.Direction.None;
 
         }
     }

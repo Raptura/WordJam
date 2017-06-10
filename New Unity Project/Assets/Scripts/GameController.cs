@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
 
         string joinedInteractionDescriptions = string.Join("\n", interactionDescriptionsInRoom.ToArray());
 
-        string combinedText = roomNavigation.currentRoom.description + "\n" + joinedInteractionDescriptions;
+        string combinedText = joinedInteractionDescriptions; //roomNavigation.currentRoom.description + "\n" + joinedInteractionDescriptions;
 
         message(combinedText);
     }

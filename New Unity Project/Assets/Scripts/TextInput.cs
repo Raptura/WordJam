@@ -32,9 +32,7 @@ public class TextInput : MonoBehaviour
                 inputAction.RespondToInput(controller, separatedInputWords);
             }
         }
-
         InputComplete();
-
     }
 
     void InputComplete()

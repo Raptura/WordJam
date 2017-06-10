@@ -3,18 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "WordJam/Map")]
-public class Map : ScriptableObject{
+public class Map : ScriptableObject
+{
 
     /// <summary>
     /// The name of the room
     /// Has no purpose other than organization
     /// </summary>
     public string mapName;
+    /// <summary>
+    /// The size of the map
+    /// </summary>
+    public int mapSize;
 
-    [TextArea]
-    public string map;
+    [HideInInspector]
+    public MapNode[] rooms;
 
-    public RoomEvent[] events;
-    public Room[] rooms;
+    void GenerateRooms()
+    {
+
+    
+    }
+
 
 }
