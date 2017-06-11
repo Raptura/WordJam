@@ -11,19 +11,13 @@ public class Map : ScriptableObject
     /// Has no purpose other than organization
     /// </summary>
     public string mapName;
+
+    public int xBounds, yBounds;
+    public int maxRoomHeight, maxRoomWidth;
+    public int maxCorridorLen;
+
     /// <summary>
-    /// The size of the map
+    /// The number of rooms to be generated
     /// </summary>
-    public int mapSize;
-
-    [HideInInspector]
-    public MapNode[] rooms;
-
-    void GenerateRooms()
-    {
-
-    
-    }
-
-
+    public int numRooms;
 }

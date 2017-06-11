@@ -6,10 +6,8 @@ public class RoomNavigation : MonoBehaviour
 {
 
     public Map currentMap;
-    public MapNode currentRoom;
+    public MapNode currentNode;
 
-
-    Dictionary<Corridor.Direction, Corridor> exitDictionary = new Dictionary<Corridor.Direction, Corridor>();
     GameController controller;
 
     void Awake()
@@ -19,42 +17,42 @@ public class RoomNavigation : MonoBehaviour
 
     public void UnpackExitsInRoom()
     {
-        for (int i = 0; i < currentRoom.exits.Length; i++)
-        {
-            exitDictionary.Add(currentRoom.exits[i].exitDirection, currentRoom.exits[i]);
-            controller.interactionDescriptionsInRoom.Add(currentRoom.exits[i].exitDescription);
-        }
+        //for (int i = 0; i < currentRoom.exits.Length; i++)
+        //{
+        //    exitDictionary.Add(currentRoom.exits[i].exitDirection, currentRoom.exits[i]);
+        //    controller.interactionDescriptionsInRoom.Add(currentRoom.exits[i].exitDescription);
+        //}
     }
 
-    public void AttemptToChangeRooms(string directionNoun)
+    public void AttemptToChangeNodes(string directionNoun)
     {
         Corridor.Direction dir = parseDirection(directionNoun);
 
-        if (exitDictionary.ContainsKey(dir))
-        {
-            if (exitDictionary[dir].isBlocked)
-            {
-                controller.message("This route seems blocked...");
-            }
-            else
-            {
-                currentRoom = exitDictionary[dir].roomToEnter;
-                controller.message("You head off to the " + directionNoun);
-                controller.DisplayRoomText();
-            }
-        }
-        else
-        {
-            controller.message("There is no path to the " + directionNoun);
-        }
+        //if (exitDictionary.ContainsKey(dir))
+        //{
+        //    if (exitDictionary[dir].isBlocked)
+        //    {
+        //        controller.message("This route seems blocked...");
+        //    }
+        //    else
+        //    {
+        //        currentRoom = exitDictionary[dir].roomToEnter;
+        //        controller.message("You head off to the " + directionNoun);
+        //        controller.DisplayRoomText();
+        //    }
+        //}
+        //else
+        //{
+        //    controller.message("There is no path to the " + directionNoun);
+        //}
 
     }
 
-    public void ClearExits()
-    {
-        exitDictionary.Clear();
-    }
-
+    /// <summary>
+    /// Parses user input to get direction
+    /// </summary>
+    /// <param name="noun"></param>
+    /// <returns></returns>
     public Corridor.Direction parseDirection(string noun)
     {
         string nounLower = noun.ToLower();

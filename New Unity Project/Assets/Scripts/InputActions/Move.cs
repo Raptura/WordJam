@@ -8,7 +8,7 @@ public class Move : InputAction
 {
     public override void RespondToInput(GameController controller, string[] separatedInputWords)
     {
-        if (separatedInputWords.Length > 1)
-            controller.roomNavigation.AttemptToChangeRooms(separatedInputWords[1]);
+        if (separatedInputWords.Length > 1) ;
+            //controller.roomNavigation.AttemptToChangeRooms(separatedInputWords[1]);
     }
 }
