@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapRoom : MonoBehaviour
+public class MapRoom
 {
 
     public MapNode[,] roomnodes;
@@ -11,7 +11,7 @@ public class MapRoom : MonoBehaviour
 
     public int posX, posY;
     public int width, height; //How large is the room
-    public Corridor entranceCorridor;
+    public Corridor entranceCorridor = null;
 
     //Use this one only for the first room
     public void SetupRoom(int x, int y, int width, int height)
@@ -37,9 +37,7 @@ public class MapRoom : MonoBehaviour
         this.height = height;
         roomnodes = new MapNode[width, height];
 
-        this.entranceCorridor = corridor;
-        posX = x;
-        posY = y;
+        entranceCorridor = corridor;
 
         for (int i = 0; i < width; i++)
         {
@@ -51,24 +49,39 @@ public class MapRoom : MonoBehaviour
                 switch (corridor.direction)
                 {
                     case Corridor.Direction.North:
-                        nodeX = posX + i; //random element from start
-                        nodeY = posY - j; //must expand up
+                        nodeX = x + i; //random element from start
+                        nodeY = y - j; //must expand up
                         break;
                     case Corridor.Direction.East:
-                        nodeX = posX + i; //must expand right
-                        nodeY = posY + j; //random element from start
+                        nodeX = x + i; //must expand right
+                        nodeY = y + j; //random element from start
                         break;
                     case Corridor.Direction.South:
-                        nodeX = posX + i; //random element from start
-                        nodeY = posY + j; //must expand down
+                        nodeX = x + i; //random element from start
+                        nodeY = y + j; //must expand down
                         break;
                     case Corridor.Direction.West:
-                        nodeX = posX - i; //must expand left
-                        nodeY = posY + j; //random element from start
+                        nodeX = x - i; //must expand left
+                        nodeY = y + j; //random element from start
                         break;
                 }
 
                 roomnodes[i, j] = new MapNode(nodeX, nodeY);
+            }
+        }
+
+        posX = roomnodes[0, 0].posX;
+        posY = roomnodes[0, 0].posY;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (posX < roomnodes[i, j].posX)
+                    posX = roomnodes[i, j].posX;
+
+                if (posY < roomnodes[i, j].posY)
+                    posY = roomnodes[i, j].posY;
             }
         }
     }

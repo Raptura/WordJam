@@ -29,7 +29,7 @@ public class MapGen : MonoBehaviour
 
         GenerateRoomsAndCorridors();
 
-        createAllNodes();
+       // createAllNodes();
 
     }
 
@@ -59,15 +59,21 @@ public class MapGen : MonoBehaviour
                 int h = Random.Range(1, mapData.maxRoomHeight + 1);
 
                 rooms[i].SetupRoom(x, y, w, h);
-                int corridorLen = Random.Range(1, mapData.maxCorridorLen + 1);
+                int corridorLen = mapData.maxCorridorLen; //Random.Range(1, mapData.maxCorridorLen + 1);
 
                 corridors[i].setupCorridor(rooms[i], corridorLen);
 
                 //Then add the nodes to the nodes list
+                GameObject newCorridorObj = new GameObject("Corridor");
+                newCorridorObj.transform.SetParent(mapHolder.transform);
                 foreach (MapNode node in corridors[i].corridorNodes)
                 {
                     node.nodeSprite = corridorSprite;
                     nodes[node.posX, node.posY] = node;
+
+                    GameObject newNode = new GameObject("Node");
+                    newNode.AddComponent<MapNodeComp>().nodeData = node;
+                    newNode.transform.SetParent(newCorridorObj.transform);
                 }
             }
             else
@@ -83,23 +89,24 @@ public class MapGen : MonoBehaviour
 
                 int corX = corridors[i - 1].endPosX;
                 int corY = corridors[i - 1].endPosY;
+
                 switch (corridors[i - 1].direction)
                 {
                     case Corridor.Direction.North:
-                        x = Random.Range(corX - (w / 2), corX + (w / 2));
+                        x = Random.Range(corX - (w / 2), corX + (w / 2) + 1);
                         y = corY - 1;
                         break;
                     case Corridor.Direction.East:
                         x = corX + 1;
-                        y = Random.Range(corY - (h / 2), corY + (h / 2));
+                        y = Random.Range(corY - (h / 2), corY + (h / 2) + 1);
                         break;
                     case Corridor.Direction.South:
-                        x = Random.Range(corX - (w / 2), corX + (w / 2));
+                        x = Random.Range(corX - (w / 2), corX + (w / 2) + 1);
                         y = corY + 1;
                         break;
                     case Corridor.Direction.West:
                         x = corX - 1;
-                        y = Random.Range(corY - (h / 2), corY + (h / 2));
+                        y = Random.Range(corY - (h / 2), corY + (h / 2) + 1);
                         break;
                 }
 
@@ -115,37 +122,34 @@ public class MapGen : MonoBehaviour
                     corridors[i].setupCorridor(rooms[i], corridorLen);
 
                     //Then add the nodes to the nodes list
+                    GameObject newCorridorObj = new GameObject("Corridor");
+                    newCorridorObj.transform.SetParent(mapHolder.transform);
                     foreach (MapNode node in corridors[i].corridorNodes)
                     {
                         node.nodeSprite = corridorSprite;
                         nodes[node.posX, node.posY] = node;
+
+                        GameObject newNode = new GameObject("Node");
+                        newNode.AddComponent<MapNodeComp>().nodeData = node;
+                        newNode.transform.SetParent(newCorridorObj.transform);
                     }
                 }
             }
 
             //Then add the nodes to the nodes list
+            //Also make the gameobjects
+            GameObject newRoomObj = new GameObject("Room");
+            newRoomObj.transform.SetParent(mapHolder.transform);
+
             foreach (MapNode node in rooms[i].roomnodes)
             {
                 node.nodeSprite = roomSprite;
                 nodes[node.posX, node.posY] = node;
+
+                GameObject newNode = new GameObject("Node");
+                newNode.AddComponent<MapNodeComp>().nodeData = node;
+                newNode.transform.SetParent(newRoomObj.transform);
             }
         }
     }
-
-    void createAllNodes()
-    {
-        for (int i = 0; i < nodes.GetLength(0); i++)
-        {
-            for (int j = 0; j < nodes.GetLength(1); j++)
-            {
-                if (nodes[i, j] != null)
-                {
-                    GameObject newNode = new GameObject("Node");
-                    newNode.AddComponent<MapNodeComp>().nodeData = nodes[i, j];
-                    newNode.transform.SetParent(mapHolder.transform);
-                }
-            }
-        }
-    }
-
 }

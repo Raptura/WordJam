@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public class Corridor
 {
 
@@ -54,32 +53,28 @@ public class Corridor
                 case Direction.West:
                     return startPosY;
                 case Direction.North:
-                    return startPosY - length - 1;
+                    return startPosY - length + 1;
                 case Direction.South:
-                    return startPosY + length + 1;
+                    return startPosY + length - 1;
                 default:
                     return 0;
             }
         }
     }
 
-    public bool isBlocked;
-
-    public bool isLinked { get { return linkedRooms[1] != null && linkedRooms[2] != null; } }
-
     /// <summary>
     /// Sets up a new corridor next to a node
     /// </summary>
-    /// <param name="node"></param>
-    public void setupCorridor(MapRoom node, int length)
+    /// <param name="room"></param>
+    public void setupCorridor(MapRoom room, int length)
     {
         this.length = length;
         //Choose a random direction to go
         direction = (Direction)Random.Range(0, 4);
 
-        if (node.entranceCorridor != null)
+        if (room.entranceCorridor != null)
         {
-            Direction otherDir = node.entranceCorridor.direction;
+            Direction otherDir = room.entranceCorridor.direction;
 
             //If the directions are the same, change directions...
             if (direction == otherDir)
@@ -94,20 +89,20 @@ public class Corridor
         switch (direction)
         {
             case Direction.North:
-                startPosX = Random.Range(node.posX, node.posX + node.width);
-                startPosY = node.posY + node.height;
+                startPosX = Random.Range(room.posX, room.posX + room.width - 1);
+                startPosY = room.posY - 1;
                 break;
             case Direction.East:
-                startPosX = node.posX + node.width;
-                startPosY = Random.Range(node.posY, node.posY + node.height);
+                startPosX = room.posX + room.width;
+                startPosY = Random.Range(room.posY, room.posY + room.height - 1);
                 break;
             case Direction.South:
-                startPosX = Random.Range(node.posX, node.posX + node.width);
-                startPosY = node.posY;
+                startPosX = Random.Range(room.posX, room.posX + room.width - 1);
+                startPosY = room.posY + room.height;
                 break;
             case Direction.West:
-                startPosX = node.posX;
-                startPosY = Random.Range(node.posY, node.posY + node.height);
+                startPosX = room.posX - 1;
+                startPosY = Random.Range(room.posY, room.posY + room.height - 1);
                 break;
         }
 
