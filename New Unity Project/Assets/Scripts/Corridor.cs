@@ -53,9 +53,9 @@ public class Corridor
                 case Direction.West:
                     return startPosY;
                 case Direction.North:
-                    return startPosY - length + 1;
+                    return startPosY + length + 1;
                 case Direction.South:
-                    return startPosY + length - 1;
+                    return startPosY - length - 1;
                 default:
                     return 0;
             }
@@ -89,20 +89,20 @@ public class Corridor
         switch (direction)
         {
             case Direction.North:
-                startPosX = Random.Range(room.posX, room.posX + room.width - 1);
-                startPosY = room.posY - 1;
+                startPosX = room.posX; //Random.Range(room.posX, room.posX + room.width - 1);
+                startPosY = room.posY + room.height;
                 break;
             case Direction.East:
                 startPosX = room.posX + room.width;
-                startPosY = Random.Range(room.posY, room.posY + room.height - 1);
+                startPosY = room.posY; //Random.Range(room.posY, room.posY + room.height - 1);
                 break;
             case Direction.South:
-                startPosX = Random.Range(room.posX, room.posX + room.width - 1);
-                startPosY = room.posY + room.height;
+                startPosX = room.posX; //Random.Range(room.posX, room.posX + room.width - 1);
+                startPosY = room.posY - 1;
                 break;
             case Direction.West:
                 startPosX = room.posX - 1;
-                startPosY = Random.Range(room.posY, room.posY + room.height - 1);
+                startPosY = room.posY; //Random.Range(room.posY, room.posY + room.height - 1);
                 break;
         }
 
@@ -116,7 +116,7 @@ public class Corridor
             {
                 case Direction.North:
                     x = startPosX;
-                    y = startPosY - i;
+                    y = startPosY + i;
                     break;
 
                 case Direction.East:
@@ -125,7 +125,7 @@ public class Corridor
                     break;
                 case Direction.South:
                     x = startPosX;
-                    y = startPosY + i;
+                    y = startPosY - i;
                     break;
                 case Direction.West:
                     x = startPosX - i;

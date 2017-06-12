@@ -50,7 +50,7 @@ public class MapRoom
                 {
                     case Corridor.Direction.North:
                         nodeX = x + i; //random element from start
-                        nodeY = y - j; //must expand up
+                        nodeY = y + j; //must expand up
                         break;
                     case Corridor.Direction.East:
                         nodeX = x + i; //must expand right
@@ -58,7 +58,7 @@ public class MapRoom
                         break;
                     case Corridor.Direction.South:
                         nodeX = x + i; //random element from start
-                        nodeY = y + j; //must expand down
+                        nodeY = y - j; //must expand down
                         break;
                     case Corridor.Direction.West:
                         nodeX = x - i; //must expand left

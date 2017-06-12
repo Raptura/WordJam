@@ -94,7 +94,7 @@ public class MapGen : MonoBehaviour
                 {
                     case Corridor.Direction.North:
                         x = Random.Range(corX - (w / 2), corX + (w / 2) + 1);
-                        y = corY - 1;
+                        y = corY + 1;
                         break;
                     case Corridor.Direction.East:
                         x = corX + 1;
@@ -102,7 +102,7 @@ public class MapGen : MonoBehaviour
                         break;
                     case Corridor.Direction.South:
                         x = Random.Range(corX - (w / 2), corX + (w / 2) + 1);
-                        y = corY + 1;
+                        y = corY - 1;
                         break;
                     case Corridor.Direction.West:
                         x = corX - 1;
