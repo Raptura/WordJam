@@ -75,14 +75,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Exit.cs" />
+    <Compile Include="Assets\Scripts\Corridor.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\InputAction.cs" />
     <Compile Include="Assets\Scripts\InputActions\Move.cs" />
     <Compile Include="Assets\Scripts\Map.cs" />
+    <Compile Include="Assets\Scripts\MapGen.cs" />
     <Compile Include="Assets\Scripts\MapNode.cs" />
+    <Compile Include="Assets\Scripts\MapNodeComp.cs" />
+    <Compile Include="Assets\Scripts\MapRoom.cs" />
     <Compile Include="Assets\Scripts\NodeEvent.cs" />
     <Compile Include="Assets\Scripts\RoomNavigation.cs" />
+    <Compile Include="Assets\Scripts\SnapCam2D.cs" />
     <Compile Include="Assets\Scripts\TextInput.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

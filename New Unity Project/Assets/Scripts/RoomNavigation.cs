@@ -5,47 +5,81 @@ using UnityEngine;
 public class RoomNavigation : MonoBehaviour
 {
 
-    public Map currentMap;
+    public MapGen mapData;
+    public MapNodeComp currNodeComp;
     public MapNode currentNode;
+    public SnapCam2D cam;
+    public GameObject playerBlip;
 
     GameController controller;
+
+    public enum Direction
+    {
+        North,
+        East,
+        South,
+        West,
+        None //This will not be set intentionally, only reference
+    }
+
+    void Start()
+    {
+        playerBlip = new GameObject("Player Blip");
+        playerBlip.transform.position = new Vector3(currNodeComp.transform.position.x, currNodeComp.transform.position.y, -1);
+        playerBlip.AddComponent<SpriteRenderer>().sprite = mapData.playerSprite;
+        cam.target = playerBlip.transform;
+    }
 
     void Awake()
     {
         controller = GetComponent<GameController>();
+        controller.roomNavigation = this;
     }
 
-    public void UnpackExitsInRoom()
+    void Update()
     {
-        //for (int i = 0; i < currentRoom.exits.Length; i++)
-        //{
-        //    exitDictionary.Add(currentRoom.exits[i].exitDirection, currentRoom.exits[i]);
-        //    controller.interactionDescriptionsInRoom.Add(currentRoom.exits[i].exitDescription);
-        //}
+        if (currNodeComp.transform != null)
+        {
+            playerBlip.transform.position = new Vector3(currNodeComp.transform.position.x, currNodeComp.transform.position.y, -1);
+        }
     }
 
     public void AttemptToChangeNodes(string directionNoun)
     {
-        Corridor.Direction dir = parseDirection(directionNoun);
+        Direction dir = parseDirection(directionNoun);
 
-        //if (exitDictionary.ContainsKey(dir))
-        //{
-        //    if (exitDictionary[dir].isBlocked)
-        //    {
-        //        controller.message("This route seems blocked...");
-        //    }
-        //    else
-        //    {
-        //        currentRoom = exitDictionary[dir].roomToEnter;
-        //        controller.message("You head off to the " + directionNoun);
-        //        controller.DisplayRoomText();
-        //    }
-        //}
-        //else
-        //{
-        //    controller.message("There is no path to the " + directionNoun);
-        //}
+        int x = currentNode.posX;
+        int y = currentNode.posY;
+        switch (dir)
+        {
+            case Direction.North:
+                y++;
+                break;
+            case Direction.East:
+                x++;
+                break;
+            case Direction.South:
+                y--;
+                break;
+            case Direction.West:
+                x--;
+                break;
+            default:
+                break;
+        }
 
+        if (mapData.nodes[x, y] != null)
+        {
+            currentNode = mapData.nodes[x, y];
+            currNodeComp = mapData.nodeComps[x, y];
+
+            controller.message("You head off to the " + directionNoun);
+            controller.DisplayRoomText();
+        }
+        else
+        {
+            controller.message("There is no path to the " + directionNoun);
+        }
     }
 
     /// <summary>
@@ -53,7 +87,7 @@ public class RoomNavigation : MonoBehaviour
     /// </summary>
     /// <param name="noun"></param>
     /// <returns></returns>
-    public Corridor.Direction parseDirection(string noun)
+    public Direction parseDirection(string noun)
     {
         string nounLower = noun.ToLower();
         switch (nounLower)
@@ -61,19 +95,19 @@ public class RoomNavigation : MonoBehaviour
             case "north":
             case "forward":
             case "up":
-                return Corridor.Direction.North;
+                return Direction.North;
             case "south":
             case "back":
             case "down":
-                return Corridor.Direction.South;
+                return Direction.South;
             case "east":
             case "left":
-                return Corridor.Direction.East;
+                return Direction.East;
             case "west":
             case "right":
-                return Corridor.Direction.West;
+                return Direction.West;
             default:
-                return Corridor.Direction.None;
+                return Direction.None;
 
         }
     }

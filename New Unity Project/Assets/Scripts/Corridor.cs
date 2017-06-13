@@ -20,7 +20,6 @@ public class Corridor
     }
     public Direction direction;
 
-    public MapRoom[] linkedRooms = new MapRoom[2];
     public int length;
     public int startPosX, startPosY;
 
@@ -53,9 +52,9 @@ public class Corridor
                 case Direction.West:
                     return startPosY;
                 case Direction.North:
-                    return startPosY + length + 1;
+                    return startPosY + length - 1;
                 case Direction.South:
-                    return startPosY - length - 1;
+                    return startPosY - length + 1;
                 default:
                     return 0;
             }
@@ -74,7 +73,7 @@ public class Corridor
 
         if (room.entranceCorridor != null)
         {
-            Direction otherDir = room.entranceCorridor.direction;
+            Direction otherDir = (Direction)(((int)room.entranceCorridor.direction + 2) % 4);
 
             //If the directions are the same, change directions...
             if (direction == otherDir)
@@ -89,20 +88,20 @@ public class Corridor
         switch (direction)
         {
             case Direction.North:
-                startPosX = room.posX; //Random.Range(room.posX, room.posX + room.width - 1);
+                startPosX = Random.Range(room.posX, room.posX + room.width);
                 startPosY = room.posY + room.height;
                 break;
             case Direction.East:
                 startPosX = room.posX + room.width;
-                startPosY = room.posY; //Random.Range(room.posY, room.posY + room.height - 1);
+                startPosY = Random.Range(room.posY, room.posY + room.height);
                 break;
             case Direction.South:
-                startPosX = room.posX; //Random.Range(room.posX, room.posX + room.width - 1);
+                startPosX = Random.Range(room.posX, room.posX + room.width);
                 startPosY = room.posY - 1;
                 break;
             case Direction.West:
                 startPosX = room.posX - 1;
-                startPosY = room.posY; //Random.Range(room.posY, room.posY + room.height - 1);
+                startPosY = Random.Range(room.posY, room.posY + room.height);
                 break;
         }
 

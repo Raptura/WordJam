@@ -29,6 +29,8 @@ public class MapRoom
                 roomnodes[i, j] = new MapNode(posX + i, posY + j);
             }
         }
+
+        Debug.Log("Room Created at (" + posX + "," + posY + ")");
     }
 
     public void SetupRoom(int x, int y, int width, int height, Corridor corridor)
@@ -77,12 +79,14 @@ public class MapRoom
         {
             for (int j = 0; j < height; j++)
             {
-                if (posX < roomnodes[i, j].posX)
+                if (posX >= roomnodes[i, j].posX)
                     posX = roomnodes[i, j].posX;
 
-                if (posY < roomnodes[i, j].posY)
+                if (posY >= roomnodes[i, j].posY)
                     posY = roomnodes[i, j].posY;
             }
         }
+
+        Debug.Log("Room Created at (" + posX + "," + posY + ")");
     }
 }

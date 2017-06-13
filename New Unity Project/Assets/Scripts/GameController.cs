@@ -44,7 +44,6 @@ public class GameController : MonoBehaviour
         message(combinedText);
     }
 
-
     /// <summary>
     /// Writes a message to the console
     /// </summary>
