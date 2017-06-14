@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 03baee61d95ed1f41b45b933d03084c7
-timeCreated: 1497380243
+timeCreated: 1497388963
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -20,6 +20,22 @@ TextureImporter:
     21300026: sp_mapTiles_2_13
     21300028: sp_mapTiles_2_14
     21300030: sp_mapTiles_2_15
+    21300032: MapTiles_0
+    21300034: MapTiles_1
+    21300036: MapTiles_2
+    21300038: MapTiles_3
+    21300040: MapTiles_4
+    21300042: MapTiles_5
+    21300044: MapTiles_6
+    21300046: MapTiles_7
+    21300048: MapTiles_8
+    21300050: MapTiles_9
+    21300052: MapTiles_10
+    21300054: MapTiles_11
+    21300056: MapTiles_12
+    21300058: MapTiles_13
+    21300060: MapTiles_14
+    21300062: MapTiles_15
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -52,7 +68,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -86,7 +102,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sp_mapTiles_2_0
+      name: MapTiles_0
       rect:
         serializedVersion: 2
         x: 0
@@ -99,7 +115,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_1
+      name: MapTiles_1
       rect:
         serializedVersion: 2
         x: 19
@@ -112,7 +128,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_2
+      name: MapTiles_2
       rect:
         serializedVersion: 2
         x: 38
@@ -125,7 +141,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_3
+      name: MapTiles_3
       rect:
         serializedVersion: 2
         x: 57
@@ -138,7 +154,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_4
+      name: MapTiles_4
       rect:
         serializedVersion: 2
         x: 0
@@ -151,7 +167,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_5
+      name: MapTiles_5
       rect:
         serializedVersion: 2
         x: 19
@@ -164,7 +180,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_6
+      name: MapTiles_6
       rect:
         serializedVersion: 2
         x: 38
@@ -177,7 +193,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_7
+      name: MapTiles_7
       rect:
         serializedVersion: 2
         x: 57
@@ -190,7 +206,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_8
+      name: MapTiles_8
       rect:
         serializedVersion: 2
         x: 0
@@ -203,7 +219,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_9
+      name: MapTiles_9
       rect:
         serializedVersion: 2
         x: 19
@@ -216,7 +232,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_10
+      name: MapTiles_10
       rect:
         serializedVersion: 2
         x: 38
@@ -229,7 +245,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_11
+      name: MapTiles_11
       rect:
         serializedVersion: 2
         x: 57
@@ -242,7 +258,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_12
+      name: MapTiles_12
       rect:
         serializedVersion: 2
         x: 0
@@ -255,7 +271,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_13
+      name: MapTiles_13
       rect:
         serializedVersion: 2
         x: 19
@@ -268,7 +284,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_14
+      name: MapTiles_14
       rect:
         serializedVersion: 2
         x: 38
@@ -281,7 +297,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: sp_mapTiles_2_15
+      name: MapTiles_15
       rect:
         serializedVersion: 2
         x: 57

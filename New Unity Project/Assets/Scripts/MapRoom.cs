@@ -6,7 +6,7 @@ public class MapRoom
 {
 
     public MapNode[,] roomnodes;
-    public NodeEvent[] events;
+    public List<NodeEvent> events = new List<NodeEvent>();
     //Node information for Map
 
     public int posX, posY;

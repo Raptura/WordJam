@@ -20,6 +20,5 @@ public class MapNodeComp : MonoBehaviour
     {
         spriteRenderer.sprite = nodeData.nodeSprite;
         transform.localPosition = new Vector2(nodeData.posX, nodeData.posY);
-
     }
 }

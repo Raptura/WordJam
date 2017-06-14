@@ -29,7 +29,7 @@ public class TextInput : MonoBehaviour
             InputAction inputAction = controller.inputActions[i];
             if (inputAction.hasKeyword(separatedInputWords[0]))
             {
-                inputAction.RespondToInput(controller, separatedInputWords);
+                inputAction.invokeInputAction(separatedInputWords);
             }
         }
         InputComplete();

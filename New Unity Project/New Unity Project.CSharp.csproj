@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -67,6 +70,9 @@
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
     </Reference>
@@ -76,9 +82,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Corridor.cs" />
+    <Compile Include="Assets\Scripts\EventScripts.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\InputAction.cs" />
+    <Compile Include="Assets\Scripts\InputActions\GenericAction.cs" />
+    <Compile Include="Assets\Scripts\InputActions\LookAround.cs" />
     <Compile Include="Assets\Scripts\InputActions\Move.cs" />
+    <Compile Include="Assets\Scripts\InputActions\Test.cs" />
     <Compile Include="Assets\Scripts\Map.cs" />
     <Compile Include="Assets\Scripts\MapGen.cs" />
     <Compile Include="Assets\Scripts\MapNode.cs" />
@@ -86,6 +96,7 @@
     <Compile Include="Assets\Scripts\MapRoom.cs" />
     <Compile Include="Assets\Scripts\NodeEvent.cs" />
     <Compile Include="Assets\Scripts\RoomNavigation.cs" />
+    <Compile Include="Assets\Scripts\SnapCam2D.cs" />
     <Compile Include="Assets\Scripts\TextInput.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

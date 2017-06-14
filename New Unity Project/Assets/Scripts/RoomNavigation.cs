@@ -13,15 +13,6 @@ public class RoomNavigation : MonoBehaviour
 
     GameController controller;
 
-    public enum Direction
-    {
-        North,
-        East,
-        South,
-        West,
-        None //This will not be set intentionally, only reference
-    }
-
     void Start()
     {
         playerBlip = new GameObject("Player Blip");
@@ -46,34 +37,36 @@ public class RoomNavigation : MonoBehaviour
 
     public void AttemptToChangeNodes(string directionNoun)
     {
-        Direction dir = parseDirection(directionNoun);
+        MapNode.Direction dir = parseDirection(directionNoun);
 
-        int x = currentNode.posX;
-        int y = currentNode.posY;
-        switch (dir)
-        {
-            case Direction.North:
-                y++;
-                break;
-            case Direction.East:
-                x++;
-                break;
-            case Direction.South:
-                y--;
-                break;
-            case Direction.West:
-                x--;
-                break;
-            default:
-                break;
-        }
 
-        if (mapData.nodes[x, y] != null)
+        if (currentNode.exits.Contains(dir))
         {
+
+            int x = currentNode.posX;
+            int y = currentNode.posY;
+            switch (dir)
+            {
+                case MapNode.Direction.North:
+                    y++;
+                    break;
+                case MapNode.Direction.East:
+                    x++;
+                    break;
+                case MapNode.Direction.South:
+                    y--;
+                    break;
+                case MapNode.Direction.West:
+                    x--;
+                    break;
+                default:
+                    break;
+            }
+
             currentNode = mapData.nodes[x, y];
             currNodeComp = mapData.nodeComps[x, y];
 
-            controller.message("You head off to the " + directionNoun);
+            controller.message("You move " + directionNoun);
             controller.DisplayRoomText();
         }
         else
@@ -87,7 +80,7 @@ public class RoomNavigation : MonoBehaviour
     /// </summary>
     /// <param name="noun"></param>
     /// <returns></returns>
-    public Direction parseDirection(string noun)
+    public MapNode.Direction parseDirection(string noun)
     {
         string nounLower = noun.ToLower();
         switch (nounLower)
@@ -95,19 +88,19 @@ public class RoomNavigation : MonoBehaviour
             case "north":
             case "forward":
             case "up":
-                return Direction.North;
+                return MapNode.Direction.North;
             case "south":
             case "back":
             case "down":
-                return Direction.South;
+                return MapNode.Direction.South;
             case "east":
-            case "left":
-                return Direction.East;
-            case "west":
             case "right":
-                return Direction.West;
+                return MapNode.Direction.East;
+            case "west":
+            case "left":
+                return MapNode.Direction.West;
             default:
-                return Direction.None;
+                return MapNode.Direction.None;
 
         }
     }

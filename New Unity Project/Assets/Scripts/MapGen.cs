@@ -7,8 +7,8 @@ public class MapGen : MonoBehaviour
 
     public Map mapData;
     public SnapCam2D cam;
-    public Sprite roomSprite, corridorSprite; //To be removed in favor for generated sprites
     public Sprite playerSprite;
+    private Sprite[] roomSprites;
 
     [HideInInspector]
     public MapNode[,] nodes;
@@ -18,6 +18,8 @@ public class MapGen : MonoBehaviour
     [HideInInspector]
     public Corridor[] corridors;
 
+    int playerStartX = 0, playerStartY = 0;
+
     /// <summary>
     /// The game object that will hold all the map and corridor tiles
     /// </summary>
@@ -25,10 +27,11 @@ public class MapGen : MonoBehaviour
 
     void Start()
     {
-
+        roomSprites = Resources.LoadAll<Sprite>("Sprites/MapTiles");
         GenerateRoomsAndCorridorsInfo();
         GenerateNodeComps();
         AssignMapNav();
+        AssignRoomEvents();
     }
 
     /// <summary>
@@ -69,6 +72,9 @@ public class MapGen : MonoBehaviour
                 int x = mapData.xBounds / 2;
                 int y = mapData.yBounds / 2;
 
+                playerStartX = x;
+                playerStartY = y;
+
                 int w = Random.Range(1, mapData.maxRoomWidth + 1);
                 int h = Random.Range(1, mapData.maxRoomHeight + 1);
 
@@ -79,7 +85,6 @@ public class MapGen : MonoBehaviour
 
                 foreach (MapNode node in corridors[i].corridorNodes)
                 {
-                    node.nodeSprite = corridorSprite;
                     nodes[node.posX, node.posY] = node;
                 }
             }
@@ -163,7 +168,6 @@ public class MapGen : MonoBehaviour
                         {
                             foreach (MapNode node in corridors[i].corridorNodes)
                             {
-                                node.nodeSprite = corridorSprite;
                                 nodes[node.posX, node.posY] = node;
                             }
                         }
@@ -175,7 +179,6 @@ public class MapGen : MonoBehaviour
             {
                 foreach (MapNode node in rooms[i].roomnodes)
                 {
-                    node.nodeSprite = roomSprite;
                     nodes[node.posX, node.posY] = node;
                 }
             }
@@ -200,13 +203,7 @@ public class MapGen : MonoBehaviour
             newRoomObj.transform.SetParent(mapHolder.transform);
             foreach (MapNode node in room.roomnodes)
             {
-                node.nodeSprite = roomSprite;
-                nodes[node.posX, node.posY] = node;
-
-                GameObject newNode = new GameObject("Node");
-                MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
-                comp.nodeData = node;
-                nodeComps[node.posX, node.posY] = comp;
+                GameObject newNode = SetupRoomNode(room, node);
                 newNode.transform.SetParent(newRoomObj.transform);
             }
         }
@@ -217,18 +214,105 @@ public class MapGen : MonoBehaviour
             newRoomObj.transform.SetParent(mapHolder.transform);
             foreach (MapNode node in corridor.corridorNodes)
             {
-                node.nodeSprite = corridorSprite;
-                nodes[node.posX, node.posY] = node;
-
-                GameObject newNode = new GameObject("Node");
-                MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
-                comp.nodeData = node;
-                nodeComps[node.posX, node.posY] = comp;
+                GameObject newNode = SetupCorridorNode(corridor, node);
                 newNode.transform.SetParent(newRoomObj.transform);
             }
         }
 
+        ReLinkNodes();
+    }
 
+    GameObject SetupRoomNode(MapRoom room, MapNode node)
+    {
+        nodes[node.posX, node.posY] = node;
+
+        foreach (MapNode r_node in room.roomnodes)
+        {
+            if (r_node != node)
+            {
+                if (nodes[node.posX, node.posY + 1] == r_node)
+                    node.exits.Add(MapNode.Direction.North);
+
+                if (nodes[node.posX + 1, node.posY] == r_node)
+                    node.exits.Add(MapNode.Direction.East);
+
+                if (nodes[node.posX, node.posY - 1] == r_node)
+                    node.exits.Add(MapNode.Direction.South);
+
+                if (nodes[node.posX - 1, node.posY] == r_node)
+                    node.exits.Add(MapNode.Direction.West);
+            }
+        }
+        node.setNodeSprites(roomSprites);
+
+        GameObject newNode = new GameObject("Node");
+        MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
+        comp.nodeData = node;
+        nodeComps[node.posX, node.posY] = comp;
+
+        return newNode;
+    }
+
+    GameObject SetupCorridorNode(Corridor corridor, MapNode node)
+    {
+        nodes[node.posX, node.posY] = node;
+
+        if (corridor.direction == Corridor.Direction.North || corridor.direction == Corridor.Direction.South)
+        {
+            node.exits.Add(MapNode.Direction.North);
+            node.exits.Add(MapNode.Direction.South);
+
+
+            nodes[node.posX, node.posY - 1].exits.Add(MapNode.Direction.North);
+            nodes[node.posX, node.posY - 1].setNodeSprites(roomSprites);
+
+            nodes[node.posX, node.posY + 1].exits.Add(MapNode.Direction.South);
+            nodes[node.posX, node.posY + 1].setNodeSprites(roomSprites);
+
+
+        }
+        else
+        {
+            node.exits.Add(MapNode.Direction.East);
+            node.exits.Add(MapNode.Direction.West);
+
+
+            nodes[node.posX - 1, node.posY].exits.Add(MapNode.Direction.East);
+            nodes[node.posX - 1, node.posY].setNodeSprites(roomSprites);
+
+            nodes[node.posX + 1, node.posY].exits.Add(MapNode.Direction.West);
+            nodes[node.posX + 1, node.posY].setNodeSprites(roomSprites);
+
+
+        }
+
+        node.setNodeSprites(roomSprites);
+
+        GameObject newNode = new GameObject("Node");
+        MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
+        comp.nodeData = node;
+        nodeComps[node.posX, node.posY] = comp;
+
+        return newNode;
+
+    }
+
+    /// <summary>
+    /// Re links all the nodes in the map to the correct game objects
+    /// </summary>
+    void ReLinkNodes()
+    {
+        for (int i = 0; i < nodes.GetLength(0); i++)
+        {
+            for (int j = 0; j < nodes.GetLength(1); j++)
+            {
+                if (nodes[i, j] != null)
+                {
+                    nodeComps[i, j].nodeData = nodes[i, j];
+                }
+            }
+
+        }
     }
 
     /// <summary>
@@ -239,8 +323,13 @@ public class MapGen : MonoBehaviour
         RoomNavigation nav = gameObject.AddComponent<RoomNavigation>();
 
         nav.mapData = this;
-        nav.currentNode = nodes[50, 50];
-        nav.currNodeComp = nodeComps[50, 50];
+        nav.currentNode = nodes[playerStartX, playerStartY];
+        nav.currNodeComp = nodeComps[playerStartX, playerStartY];
         nav.cam = cam;
+    }
+
+    void AssignRoomEvents()
+    {
+        rooms[0].events.Add(EventScripts.firstFall());
     }
 }
