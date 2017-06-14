@@ -9,7 +9,6 @@ public class Corridor
 
     public string exitDescription;
 
-
     public enum Direction
     {
         North,

@@ -244,7 +244,7 @@ public class MapGen : MonoBehaviour
             }
         }
         node.setNodeSprites(roomSprites);
-
+        node.room = room;
         GameObject newNode = new GameObject("Node");
         MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
         comp.nodeData = node;
@@ -330,6 +330,8 @@ public class MapGen : MonoBehaviour
 
     void AssignRoomEvents()
     {
-        rooms[0].events.Add(EventScripts.firstFall());
+        rooms[0].events.Add(EventScripts.firstFall(rooms[0].roomnodes[0, 0]));
+
+        rooms[1].events.Add(EventScripts.exitFloor(rooms[1].roomnodes[0, 0]));
     }
 }

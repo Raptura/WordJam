@@ -12,14 +12,14 @@ public class TextInput : MonoBehaviour
 
     void Awake()
     {
-        controller = GetComponent<GameController>();
+        controller = GameController.instance;
         inputField.onEndEdit.AddListener(AcceptStringInput);
     }
 
     void AcceptStringInput(string userInput)
     {
         userInput = userInput.ToLower();
-        controller.message(userInput);
+        controller.message(">> " + userInput);
 
         char[] delimiterCharacters = { ' ' };
         string[] separatedInputWords = userInput.Split(delimiterCharacters);

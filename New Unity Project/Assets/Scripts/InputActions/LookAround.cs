@@ -7,6 +7,8 @@ public class LookAround : InputAction
 {
     public override void RespondToInput(string[] separatedInputWords)
     {
+        GameController.instance.message("You look around the room");
+        GameController.instance.roomNavigation.describeRoom();
         //Reduce obfuscation of the room
     }
 }

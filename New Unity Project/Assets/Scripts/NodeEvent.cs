@@ -6,6 +6,9 @@ using UnityEngine.Events;
 [System.Serializable]
 public class NodeEvent
 {
+
+    public MapNode node;
+
     public enum EventStatus
     {
         Incomplete,
@@ -77,6 +80,11 @@ public class NodeEvent
     {
         successListener = new UnityAction(Succeed);
         failureListener = new UnityAction(Fail);
+    }
+
+    public void setupEnterAction(Action ac)
+    {
+        GameController.StartListening("enter node " + "(" + node.posX + "," + node.posY + ")", new UnityAction(ac));
     }
 
 }

@@ -1,41 +1,25 @@
 fileFormatVersion: 2
-guid: 03baee61d95ed1f41b45b933d03084c7
-timeCreated: 1497388963
+guid: c12f6e671c1f41e4b9fa3e8898737338
+timeCreated: 1497463503
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: sp_mapTiles_2_0
-    21300002: sp_mapTiles_2_1
-    21300004: sp_mapTiles_2_2
-    21300006: sp_mapTiles_2_3
-    21300008: sp_mapTiles_2_4
-    21300010: sp_mapTiles_2_5
-    21300012: sp_mapTiles_2_6
-    21300014: sp_mapTiles_2_7
-    21300016: sp_mapTiles_2_8
-    21300018: sp_mapTiles_2_9
-    21300020: sp_mapTiles_2_10
-    21300022: sp_mapTiles_2_11
-    21300024: sp_mapTiles_2_12
-    21300026: sp_mapTiles_2_13
-    21300028: sp_mapTiles_2_14
-    21300030: sp_mapTiles_2_15
-    21300032: MapTiles_0
-    21300034: MapTiles_1
-    21300036: MapTiles_2
-    21300038: MapTiles_3
-    21300040: MapTiles_4
-    21300042: MapTiles_5
-    21300044: MapTiles_6
-    21300046: MapTiles_7
-    21300048: MapTiles_8
-    21300050: MapTiles_9
-    21300052: MapTiles_10
-    21300054: MapTiles_11
-    21300056: MapTiles_12
-    21300058: MapTiles_13
-    21300060: MapTiles_14
-    21300062: MapTiles_15
+    21300000: MapTiles_0
+    21300002: MapTiles_1
+    21300004: MapTiles_2
+    21300006: MapTiles_3
+    21300008: MapTiles_4
+    21300010: MapTiles_5
+    21300012: MapTiles_6
+    21300014: MapTiles_7
+    21300016: MapTiles_8
+    21300018: MapTiles_9
+    21300020: MapTiles_10
+    21300022: MapTiles_11
+    21300024: MapTiles_12
+    21300026: MapTiles_13
+    21300028: MapTiles_14
+    21300030: MapTiles_15
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -68,7 +52,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}

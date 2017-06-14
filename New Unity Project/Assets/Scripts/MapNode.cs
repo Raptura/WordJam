@@ -14,6 +14,7 @@ public class MapNode
     }
 
     public Sprite nodeSprite;
+    public MapRoom room = null;
 
     public enum Direction
     {
@@ -23,7 +24,9 @@ public class MapNode
         West,
         None //This will not be set intentionally, only reference
     }
+
     public List<Direction> exits = new List<Direction>();
+    public List<Direction> blockedExits = new List<Direction>();
 
     public void setNodeSprites(Sprite[] roomSprites)
     {

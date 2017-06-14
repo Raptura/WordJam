@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,12 +14,19 @@ public class RoomNavigation : MonoBehaviour
 
     GameController controller;
 
+    public void describeRoom()
+    {
+        GameController.instance.message(currentNode.room.description);
+    }
+
     void Start()
     {
         playerBlip = new GameObject("Player Blip");
         playerBlip.transform.position = new Vector3(currNodeComp.transform.position.x, currNodeComp.transform.position.y, -1);
         playerBlip.AddComponent<SpriteRenderer>().sprite = mapData.playerSprite;
         cam.target = playerBlip.transform;
+
+
     }
 
     void Awake()
@@ -39,8 +47,7 @@ public class RoomNavigation : MonoBehaviour
     {
         MapNode.Direction dir = parseDirection(directionNoun);
 
-
-        if (currentNode.exits.Contains(dir))
+        if (currentNode.exits.Contains(dir) && currentNode.blockedExits.Contains(dir) == false)
         {
 
             int x = currentNode.posX;
@@ -67,7 +74,12 @@ public class RoomNavigation : MonoBehaviour
             currNodeComp = mapData.nodeComps[x, y];
 
             controller.message("You move " + directionNoun);
+            GameController.TriggerEvent("enter node " + "(" + x + "," + y + ")");
             controller.DisplayRoomText();
+        }
+        else if (currentNode.blockedExits.Contains(dir))
+        {
+            controller.message("The way " + directionNoun + " is blocked!");
         }
         else
         {
@@ -104,4 +116,10 @@ public class RoomNavigation : MonoBehaviour
 
         }
     }
+
+    public void ExitFloor()
+    {
+
+    }
+
 }

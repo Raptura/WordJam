@@ -32,8 +32,9 @@ public abstract class InputAction : ScriptableObject
             data += separatedInputWords[i];
         }
 
-        GameController.TriggerEvent(key + data);
         RespondToInput(separatedInputWords);
+
+        GameController.TriggerEvent(key + data);
     }
 
     public abstract void RespondToInput(string[] separatedInputWords);

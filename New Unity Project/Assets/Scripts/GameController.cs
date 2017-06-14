@@ -43,6 +43,8 @@ public class GameController : MonoBehaviour
 
     public static string lastEvent;
 
+    public PlayerInfo playerInfo;
+
     List<string> actionLog = new List<string>();
 
     void Init()
@@ -50,6 +52,11 @@ public class GameController : MonoBehaviour
         if (eventDictionary == null)
         {
             eventDictionary = new Dictionary<string, UnityEvent>();
+        }
+
+        if (playerInfo == null)
+        {
+            playerInfo = new PlayerInfo();
         }
     }
 

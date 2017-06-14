@@ -12,6 +12,7 @@ public class MapRoom
     public int posX, posY;
     public int width, height; //How large is the room
     public Corridor entranceCorridor = null;
+    public string description; //The description used for "look around" action
 
     //Use this one only for the first room
     public void SetupRoom(int x, int y, int width, int height)

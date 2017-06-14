@@ -39,7 +39,7 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent firstFall()
+    public static NodeEvent firstFall(MapNode node)
     {
         NodeEvent e = new NodeEvent();
         e.status = NodeEvent.EventStatus.Incomplete;
@@ -55,6 +55,8 @@ public class EventScripts
         {
             //GameController.instance.message("You succeeded!");
             GameController.StopListening(success, e.successListener);
+
+            node.blockedExits.Clear();
         };
 
         //What happens when you fail
@@ -68,24 +70,29 @@ public class EventScripts
         GameController.instance.message("You should probably take that torch.");
 
         GameController.instance.changeObjective("take the torch");
+        node.blockedExits.Add(MapNode.Direction.North);
+        node.blockedExits.Add(MapNode.Direction.South);
+        node.blockedExits.Add(MapNode.Direction.East);
+        node.blockedExits.Add(MapNode.Direction.West);
 
         e.addAction("take torch", delegate ()
         {
+            GameController.instance.playerInfo.addTorch();
             GameController.instance.message("You take the torch");
             GameController.instance.message("Even if the torch is about to die out, you should probably look around the room");
             GameController.instance.changeObjective("Look Around the room");
+            node.room.description = "The room is extremely dark...";
             e.removeAction("take torch");
-
 
             e.addAction("look around", delegate ()
             {
-                GameController.instance.message("You look around the cavernous room.");
                 GameController.instance.message("With what little light the torch gives, you see a small bottle on the ground.");
                 GameController.instance.changeObjective("Grab the bottle off the ground");
 
                 e.removeAction("look around");
                 e.addAction("take bottle", delegate ()
                 {
+                    GameController.instance.playerInfo.addInventory("fuel bottle");
                     GameController.instance.message("You take the bottle");
                     GameController.instance.message("Well, go on, try examining the bottle.");
                     GameController.instance.changeObjective("Examine the bottle");
@@ -100,15 +107,22 @@ public class EventScripts
 
                         e.addAction("use bottle on torch", delegate ()
                         {
+                            GameController.instance.playerInfo.removeInventory("fuel bottle");
+                            GameController.instance.playerInfo.addInventory("empty bottle");
+
                             GameController.instance.message("You pour some of the fuel onto the torch, and the embers grow into a healthy flame.");
                             GameController.instance.message("You can see a bit better now.");
                             GameController.instance.changeObjective("Use your newly gained vision to look around the room");
+                            node.room.description = "The ground beneath you is very moist. A little too moist for your liking.";
                             e.removeAction("use bottle on torch");
 
                             e.addAction("look around", delegate ()
                             {
-                                GameController.instance.message("You look around the cavernous room. The ground beneath you is very moist. A little too moist for your liking.");
-                                GameController.instance.message("To the [direction] you see an opening that you can go through.");
+                                string dir = "";
+                                MapNode.Direction dirS = node.exits[0];
+                                dir = dirS.ToString().ToLower();
+
+                                GameController.instance.message("To the " + dir + " you see an opening that you can go through.");
                                 GameController.instance.message("That seems like a good direction to go in.");
                                 GameController.instance.changeObjective("Exit the floor: Use the 'move/go' command");
                                 GameController.TriggerEvent(success);
@@ -122,6 +136,31 @@ public class EventScripts
                 });
 
             });
+
+        });
+
+        return e;
+    }
+
+    public static NodeEvent exitFloor(MapNode node)
+    {
+        NodeEvent e = new NodeEvent();
+        e.status = NodeEvent.EventStatus.Incomplete;
+        e.node = node;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You see the stairs to the next floor");
+        });
+
+        e.addAction("exit", delegate
+        {
+            if (GameController.instance.roomNavigation.currentNode == node)
+            {
+                GameController.instance.message("You climb the stairs to the next floor");
+                GameController.instance.roomNavigation.ExitFloor();
+                e.removeAction("exit");
+            }
 
         });
 
