@@ -42,8 +42,12 @@ public class NodeEvent
         if (actions.ContainsKey(key) == false)
         {
             actions.Add(key, ac);
+
             if (initialized)
+            {
+                Debug.Log("Added " + key + "post init");
                 GameController.StartListening(key, invokeAction);
+            }
         }
     }
 
@@ -56,7 +60,7 @@ public class NodeEvent
         }
         else
         {
-            Debug.Log("The key" + key + "does not exist");
+            Debug.Log("The key " + key + " does not exist");
         }
     }
 
@@ -74,6 +78,7 @@ public class NodeEvent
         {
             status = EventStatus.Success;
             successDelegate.Invoke();
+            Flush();
         }
     }
 
@@ -84,6 +89,7 @@ public class NodeEvent
         {
             status = EventStatus.Failure;
             failureDelegate.Invoke();
+            Flush();
         }
     }
 

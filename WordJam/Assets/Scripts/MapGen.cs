@@ -353,20 +353,22 @@ public class MapGen : MonoBehaviour
         if (floorNum == 1)
         {
             rooms[0].events.Add(EventScripts.firstFall());
-            rooms[1].events.Add(EventScripts.exitFloor());
         }
         else if (floorNum == 2)
         {
-            rooms[0].events.Add(EventScripts.skeletonPuzzzle1());
-            rooms[0].events.Add(EventScripts.skeletonPuzzzle2());
+            rooms[0].events.Add(EventScripts.skeletonPuzzzle());
         }
-        else
+        else if (floorNum == 3)
         {
-            rooms[0].events.Add(EventScripts.crowbarPuzzle1());
-            rooms[0].events.Add(EventScripts.crowbarPuzzle2());
+            rooms[0].events.Add(EventScripts.crowbarPuzzle());
+
+            rooms[1].events.Add(EventScripts.stonePuzzle());
+
+            rooms[2].events.Add(EventScripts.exitWell());
         }
 
-        rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor());
+        if (floorNum != 3)
+            rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor());
         foreach (MapRoom room in rooms)
         {
             room.assignRandomEvents();

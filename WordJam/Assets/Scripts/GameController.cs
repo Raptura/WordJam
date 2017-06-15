@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -112,19 +114,25 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Event Triggered: " + eventName);
         UnityEvent thisEvent = null;
+        UnityEvent anyEvent = null;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
             lastEvent = eventName;
 
             thisEvent.Invoke();
 
-            if (instance.eventDictionary.TryGetValue("any", out thisEvent))
+            if (instance.eventDictionary.TryGetValue("any", out anyEvent))
             {
-                thisEvent.Invoke();
+                Debug.Log("Event Triggered: " + "any");
+                anyEvent.Invoke();
             }
-
         }
 
+    }
+
+    public static void ExitWell()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 
     /// <summary>

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EventScripts
 {
-
     public static NodeEvent testEvent()
     {
 
@@ -39,6 +38,11 @@ public class EventScripts
         NodeEvent e = new NodeEvent("exitFloor");
         e.status = NodeEvent.EventStatus.Incomplete;
 
+        e.onInit += () =>
+        {
+            e.node.room.description = "You see the stairs to the next floor";
+        };
+
         e.setupEnterAction(delegate
         {
             e.node.room.description = "You see the stairs to the next floor";
@@ -52,7 +56,6 @@ public class EventScripts
             {
                 GameController.instance.message("You climb the stairs to the next floor");
                 GameController.instance.roomNavigation.ExitFloor();
-                e.removeAction("exit");
             }
 
         });
@@ -60,6 +63,48 @@ public class EventScripts
         return e;
     }
 
+
+
+    public static NodeEvent exitWell()
+    {
+        NodeEvent e = new NodeEvent("exitwell");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.onInit += () =>
+        {
+            e.node.room.description = "You see the light to the top of the well";
+        };
+
+        e.setupEnterAction(delegate
+        {
+            e.node.room.description = "You see the light to the top of the well";
+            GameController.instance.message("You see the bright light beaming to the outside world");
+            GameController.instance.changeObjective("Exit the well.");
+        });
+
+        e.addAction("exit", delegate
+        {
+            if (GameController.instance.roomNavigation.currentNode == e.node)
+            {
+                GameController.instance.message("You finally exit the well. It was an experience you can tell your parents about!");
+                GameController.instance.message("Say 'goodbye' to exit the well");
+                GameController.instance.changeObjective("Say 'goodbye' at the well exit.");
+                e.addAction("goodbye", delegate
+                {
+                    if (GameController.instance.roomNavigation.currentNode == e.node)
+                    {
+                        GameController.ExitWell();
+                    }
+
+                });
+            }
+
+        });
+
+        return e;
+    }
+
+    //First Fall
     public static NodeEvent firstFall()
     {
         NodeEvent e = new NodeEvent("firstFall");
@@ -151,7 +196,9 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent skeletonPuzzzle1()
+    //Skeleton Puzzle
+
+    public static NodeEvent skeletonPuzzzle()
     {
         GameController cont = GameController.instance;
         NodeEvent e = new NodeEvent("skeleton1");
@@ -160,6 +207,7 @@ public class EventScripts
         e.onInit += () =>
         {
             e.node.room.description = "You see a stone table in the room. On top of this table is a skeleton. It's missing its head";
+            e.node.room.addRoomEvent(skeletonPuzzzleTable());
         };
 
         e.setupEnterAction(delegate
@@ -193,7 +241,7 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent skeletonPuzzzle2()
+    private static NodeEvent skeletonPuzzzleTable()
     {
         GameController cont = GameController.instance;
         NodeEvent e = new NodeEvent("skeleton2");
@@ -228,7 +276,9 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent crowbarPuzzle1()
+    //Crowbar Puzzle
+
+    public static NodeEvent crowbarPuzzle()
     {
         GameController cont = GameController.instance;
         NodeEvent e = new NodeEvent("crowbar1");
@@ -237,6 +287,8 @@ public class EventScripts
         e.onInit += () =>
         {
             e.node.room.description = "You notice a large lever in the the room.";
+            e.node.room.addRoomEvent(crowBarPuzzle1());
+            e.node.room.addRoomEvent(crowbarPuzzle2(e));
         };
 
         //What happens when you succeed
@@ -270,37 +322,40 @@ public class EventScripts
                     cont.message("You notice water seeping out from the sides, and the gates surrounding the room lock.");
                     cont.changeObjective("Escape the room.");
 
-                    e.removeAction("pull lever");
-
                     int counter = 0;
                     e.addAction("any", delegate
                     {
                         counter++;
                         switch (counter)
                         {
-                            case 0:
+                            case 1:
                                 cont.message("The water level is currently at your shoes.");
                                 break;
-                            case 1:
+                            case 2:
                                 cont.message("The water level is currently at your knees.");
                                 break;
-                            case 2:
+                            case 3:
                                 cont.message("The water level is currently at your hips. You begin to panic.");
                                 break;
-                            case 3:
+                            case 4:
                                 cont.message("The water level is currently at your torso. This is not looking too good...");
                                 break;
-                            case 4:
+                            case 5:
                                 cont.message("The water level is currently at your shoulders. It seems the end is nigh...");
                                 break;
-                            case 5:
+                            case 6:
                                 cont.message("The water level is currently above your head. You struggle to breathe. You see a faint light...");
                                 GameController.TriggerEvent(e.failureTrigger);
                                 break;
                             default:
+                                Debug.Log("nothing is happening...");
                                 break;
                         }
+                        Debug.Log("Counter" + counter);
                     });
+
+                    e.removeAction("pull lever");
+
 
                     e.addAction("pull lever", delegate
                     {
@@ -310,8 +365,6 @@ public class EventScripts
                         }
                     });
 
-                    e.node.room.addRoomEvent(crowbarPuzzle3(e));
-
                 }
             });
 
@@ -320,7 +373,7 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent crowbarPuzzle2()
+    private static NodeEvent crowBarPuzzle1()
     {
         GameController cont = GameController.instance;
         NodeEvent e = new NodeEvent("crowbar2");
@@ -346,7 +399,7 @@ public class EventScripts
         return e;
     }
 
-    public static NodeEvent crowbarPuzzle3(NodeEvent e1)
+    private static NodeEvent crowbarPuzzle2(NodeEvent e1)
     {
         GameController cont = GameController.instance;
         NodeEvent e = new NodeEvent("crowbar3");
@@ -389,6 +442,263 @@ public class EventScripts
                 }
             });
 
+        });
+
+        return e;
+    }
+
+
+    //Stone Puzzle
+
+    public static NodeEvent stonePuzzle()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stonePuzzleStart");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.onInit += () =>
+        {
+            e.node.room.description = "There's a large circle painted on a smooth wall. Inside the circle are three shallow holes, aligned horizontally.";
+
+            e.node.room.addRoomEvent(stonePuzzleNote());
+            e.node.room.addRoomEvent(stonePuzzleBlack());
+            e.node.room.addRoomEvent(stonePuzzleBlue());
+            e.node.room.addRoomEvent(stonePuzzleGreen());
+            e.node.room.addRoomEvent(stonePuzzleRed());
+        };
+
+        e.setupEnterAction(delegate
+        {
+            cont.message("There's a large circle painted on a smooth wall. Inside the circle are three shallow holes, aligned horizontally.");
+        });
+
+        e.addAction("look circle", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                cont.message("Just a painted circle. You're more interested in the holes, though.");
+
+                e.removeEnterAction();
+            }
+        });
+
+        e.addAction("look holes", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                cont.message("Theres are holes on the left, middle, and right of the circle.");
+                cont.message("Hmm. The left hole seems more moist than the others. There's actually water dripping from it.");
+            }
+        });
+
+        e.addAction("place green stone in right hole", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                if (cont.playerInfo.hasItem("green stone"))
+                {
+                    cont.playerInfo.removeInventory("green stone");
+                    cont.message("You put the green stone in the right hole.");
+
+                    e.removeAction("place green stone in right hole");
+                }
+            }
+        });
+
+        e.addAction("place red stone in middle hole", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                if (cont.playerInfo.hasItem("red stone"))
+                {
+                    cont.playerInfo.removeInventory("red stone");
+                    cont.message("You put the red stone in the middle hole.");
+
+                    e.removeAction("place red stone in middle hole");
+                }
+            }
+        });
+
+        e.addAction("place blue stone in left hole", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                if (cont.playerInfo.hasItem("blue stone"))
+                {
+                    cont.playerInfo.removeInventory("blue stone");
+                    cont.message("You put the blue stone in the left hole.");
+                    cont.message("Water starts running from the hole, slowly filling the room.");
+
+                    e.removeAction("place blue stone in left hole");
+                }
+            }
+        });
+
+        e.addAction("use black stone on left hole", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                if (cont.playerInfo.hasItem("black stone"))
+                {
+                    cont.message("You use the black stone to dig open the running hole. Water starts to gush out even more. Are you sure about this?");
+
+                    e.removeAction("use black stone in left hole");
+                }
+            }
+        });
+
+        return e;
+    }
+
+    private static NodeEvent stonePuzzleGreen()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stoneGreen");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You notice a peculiar green stone.");
+        });
+
+        e.addAction("take green stone", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                string examine = "Very mossy.";
+                cont.playerInfo.addInventory("green stone", examineText: examine);
+                cont.message("You take the green stone");
+
+                e.removeAction("take green stone");
+                e.removeEnterAction();
+            }
+        });
+
+        return e;
+    }
+
+    private static NodeEvent stonePuzzleRed()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stoneRed");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You notice a shiny red stone.");
+        });
+
+        e.addAction("take red stone", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                string examine = "Warm to the touch.";
+                cont.playerInfo.addInventory("red stone", examineText: examine);
+                cont.message("You take the red stone");
+
+                e.removeAction("take red stone");
+                e.removeEnterAction();
+            }
+        });
+
+        return e;
+    }
+
+    private static NodeEvent stonePuzzleBlue()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stoneBlue");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You notice a sparkling blue stone.");
+        });
+
+        e.addAction("take blue stone", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                string examine = "Moist.";
+                cont.playerInfo.addInventory("blue stone", examineText: examine);
+                cont.message("You take the blue stone");
+
+                e.removeAction("take blue stone");
+                e.removeEnterAction();
+            }
+        });
+
+        return e;
+    }
+
+    private static NodeEvent stonePuzzleBlack()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stoneBlack");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            cont.message("You notice a sharp black stone.");
+        });
+
+        e.addAction("take black stone", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                string examine = "Sharp and pointy. You can probably dig with it.";
+                cont.playerInfo.addInventory("black stone", examineText: examine);
+                cont.message("You take the black stone");
+
+                e.removeAction("take black stone");
+                e.removeEnterAction();
+            }
+        });
+
+        return e;
+    }
+
+    private static NodeEvent stonePuzzleNote()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("stoneNote");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            cont.message("In this moist, moist room you see a skeleton resting against a wall. Its boney hands clutch on to a flimsy page.");
+
+        });
+
+        e.addAction("take page", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
+            {
+                string examine = "The scribbles on the page read\n\n" +
+                "Dear Diary,\n" + "I've finally solved the wretched puzzle in the far-side room. " +
+                "The green stone goes int he right slot, and blue stone to the left, and then the red stone in the middle. " +
+                "I ain't figured out what the black stone is for. " +
+                "However, I've inspected the holes for myself and I felt drips of water behind the holes. " +
+                "Especially behind the left slot. " +
+                "And aye, you know how my greatest fears include drowning in a cave. " +
+                "You'd more quickly find me dead dry than drowned.";
+
+                cont.playerInfo.addInventory("page", examineText: examine);
+                cont.message("You take the page");
+
+                e.removeAction("take page");
+                e.removeEnterAction();
+
+                e.node.room.description = "You see a skeleton resting against a wall.";
+
+                e.addAction("look skeleton", delegate
+                {
+                    if (cont.roomNavigation.currentNode == e.node)
+                    {
+                        cont.message("The skeleton is indeed dry.");
+                    }
+                });
+            }
         });
 
         return e;
