@@ -5,16 +5,16 @@ using UnityEngine.Events;
 
 public class PlayerInfo
 {
-    public delegate void ItemAction();
-    private Dictionary<string, ItemAction> inventory = new Dictionary<string, ItemAction>();
-    private Dictionary<string, string> inventoryDescriptions = new Dictionary<string, string>(); //What is said about each item when you use examine
+    private List<string> inventory = new List<string>();
+    private Dictionary<string, UnityAction> inventoryActions = new Dictionary<string, UnityAction>();
+    private Dictionary<string, UnityAction> inventoryExamine = new Dictionary<string, UnityAction>();
 
     void listInventory()
     {
         if (inventory.Count > 0)
         {
             GameController.instance.message("<Current Inventory>");
-            foreach (string item in inventory.Keys)
+            foreach (string item in inventory)
             {
                 GameController.instance.message(item);
             }
@@ -25,7 +25,7 @@ public class PlayerInfo
         }
     }
 
-    public void addInventory(string item, ItemAction ac = null, string examineText = null)
+    public void addInventory(string item, UnityAction ac = null, string examineText = null)
     {
         item = item.ToLower();
 
@@ -39,36 +39,44 @@ public class PlayerInfo
             examineText = "It is a " + item + ", such an elegant design";
         }
 
-        if (inventory.ContainsKey(item) == false)
+        if (inventory.Contains(item) == false)
         {
-            ItemAction delUse = delegate ()
+            UnityAction delUse = delegate ()
             {
                 GameController.instance.message("You use the " + item);
             };
 
-            ItemAction delEx = delegate ()
+            UnityAction delEx = delegate ()
             {
                 GameController.instance.message(examineText);
             };
 
             delUse += ac;
 
-            inventory.Add(item, delUse);
-            GameController.StartListening("use " + item, new UnityAction(delUse));
-            GameController.StartListening("look " + item, new UnityAction(delEx));
+            inventory.Add(item);
+            inventoryActions.Add(item, delUse);
+            inventoryExamine.Add(item, delEx);
+
+            GameController.StartListening("use " + item, delUse);
+            GameController.StartListening("look " + item, delEx);
         }
         else
         {
-            inventory[item] += ac;
+            inventoryActions[item] += ac;
         }
     }
 
     public void removeInventory(string item)
     {
-        if (inventory.ContainsKey(item))
+        if (inventory.Contains(item))
         {
+            GameController.StopListening("use " + item, inventoryActions[item]);
+            GameController.StopListening("look " + item, inventoryExamine[item]);
+
+            inventoryActions.Remove(item);
+            inventoryExamine.Remove(item);
             inventory.Remove(item);
-            inventoryDescriptions.Remove(item);
+
         }
         else
         {
@@ -78,7 +86,7 @@ public class PlayerInfo
 
     public bool hasItem(string item)
     {
-        return inventory.ContainsKey(item);
+        return inventory.Contains(item);
     }
 
     public PlayerInfo()

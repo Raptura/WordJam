@@ -44,10 +44,12 @@ public class EventScripts
         NodeEvent e = new NodeEvent();
         e.status = NodeEvent.EventStatus.Incomplete;
         e.node = node;
+        node.room.description = "You see the stairs to the next floor";
 
         e.setupEnterAction(delegate
         {
             GameController.instance.message("You see the stairs to the next floor");
+            GameController.instance.changeObjective("Exit the floor.");
         });
 
         e.addAction("exit", delegate
@@ -177,12 +179,14 @@ public class EventScripts
 
         e.setupEnterAction(delegate
         {
-            node.room.lockRoom();
+
             node.room.description = "You see a stone table in the room. On top of this table is a skeleton. It's missing its head";
 
             if (cont.roomNavigation.traversedNodes.Contains(node) == false)
             {
+                node.room.lockRoom();
                 GameController.instance.message("You hear a door lock in the distance...");
+                cont.changeObjective("Escape the room.");
             }
             GameController.instance.message("You notice that there's a human skull on the ground.");
 

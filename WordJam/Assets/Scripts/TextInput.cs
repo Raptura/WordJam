@@ -18,7 +18,7 @@ public class TextInput : MonoBehaviour
 
     void AcceptStringInput(string userInput)
     {
-        userInput = userInput.ToLower();
+        userInput = userInput.ToLower().Trim();
         controller.message(">> " + userInput);
 
         char[] delimiterCharacters = { ' ' };

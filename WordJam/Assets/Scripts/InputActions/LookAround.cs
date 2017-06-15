@@ -7,20 +7,23 @@ public class LookAround : InputAction
 {
     public override void RespondToInput(string[] separatedInputWords)
     {
-        if (separatedInputWords[1] == "around" || separatedInputWords[1] == "room")
+        if (separatedInputWords.Length == 2)
         {
-            GameController.instance.message("You look around the room");
-            GameController.instance.roomNavigation.describeRoom();
-            //Reduce obfuscation of the room
-
-            if (GameController.instance.playerInfo.hasItem("torch"))
+            if (separatedInputWords[1] == "around" || separatedInputWords[1] == "room")
             {
-                MapNode currNode = GameController.instance.roomNavigation.currentNode;
-                if (currNode.room != null)
+                GameController.instance.message("You look around the room");
+                GameController.instance.roomNavigation.describeRoom();
+                //Reduce obfuscation of the room
+
+                if (GameController.instance.playerInfo.hasItem("torch"))
                 {
-                    foreach (MapNode node in currNode.room.roomnodes)
+                    MapNode currNode = GameController.instance.roomNavigation.currentNode;
+                    if (currNode.room != null)
                     {
-                        node.hidden = false;
+                        foreach (MapNode node in currNode.room.roomnodes)
+                        {
+                            node.hidden = false;
+                        }
                     }
                 }
             }
