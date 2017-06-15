@@ -7,27 +7,22 @@ public class EventScripts
 
     public static NodeEvent testEvent()
     {
-        NodeEvent e = new NodeEvent();
+
+        NodeEvent e = new NodeEvent("test");
         e.status = NodeEvent.EventStatus.Incomplete;
-
-        string success = "testSuccess";
-        string fail = "testFail";
-
-        GameController.StartListening("testSuccess", e.successListener);
-        GameController.StartListening("testFail", e.failureListener);
 
         //What happens when you succeed
         e.successDelegate += () =>
         {
             GameController.instance.message("You succeeded!");
-            GameController.StopListening(success, e.successListener);
+            GameController.StopListening(e.successTrigger, e.successListener);
         };
 
         //What happens when you fail
         e.failureDelegate += () =>
         {
             GameController.instance.message("You Failed");
-            GameController.StopListening(fail, e.failureListener);
+            GameController.StopListening(e.failureTrigger, e.failureListener);
         };
 
 
@@ -41,7 +36,7 @@ public class EventScripts
 
     public static NodeEvent exitFloor()
     {
-        NodeEvent e = new NodeEvent();
+        NodeEvent e = new NodeEvent("exitFloor");
         e.status = NodeEvent.EventStatus.Incomplete;
 
         e.setupEnterAction(delegate
@@ -67,30 +62,17 @@ public class EventScripts
 
     public static NodeEvent firstFall()
     {
-        NodeEvent e = new NodeEvent();
+        NodeEvent e = new NodeEvent("firstFall");
         e.status = NodeEvent.EventStatus.Incomplete;
 
-        string success = "fallSuccess";
-        string fail = "fallFail";
-
-        GameController.StartListening(success, e.successListener);
-        GameController.StartListening(fail, e.failureListener);
 
         //What happens when you succeed
         e.successDelegate += () =>
         {
-            //GameController.instance.message("You succeeded!");
-            GameController.StopListening(success, e.successListener);
-
-            e.node.blockedExits.Clear();
+            e.node.room.unlockRoom();
+            GameController.StopListening(e.successTrigger, e.successListener);
         };
 
-        //What happens when you fail
-        e.failureDelegate += () =>
-        {
-            //GameController.instance.message("You Failed");
-            GameController.StopListening(fail, e.failureListener);
-        };
 
         e.setupEnterAction(delegate
         {
@@ -100,6 +82,7 @@ public class EventScripts
             GameController.instance.changeObjective("take the torch");
             e.node.room.lockRoom();
             e.node.room.description = "The room is extremely dark...";
+            e.removeEnterAction();
         });
 
         e.addAction("take torch", delegate ()
@@ -151,7 +134,7 @@ public class EventScripts
                                 GameController.instance.message("To the " + dir + " you see an opening that you can go through.");
                                 GameController.instance.message("That seems like a good direction to go in.");
                                 GameController.instance.changeObjective("Exit the floor: Use the 'move/go' command");
-                                GameController.TriggerEvent(success);
+                                GameController.TriggerEvent(e.successTrigger);
                                 e.removeAction("look around");
                             });
 
@@ -171,8 +154,13 @@ public class EventScripts
     public static NodeEvent skeletonPuzzzle1()
     {
         GameController cont = GameController.instance;
-        NodeEvent e = new NodeEvent();
+        NodeEvent e = new NodeEvent("skeleton1");
         e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.onInit += () =>
+        {
+            e.node.room.description = "You see a stone table in the room. On top of this table is a skeleton. It's missing its head";
+        };
 
         e.setupEnterAction(delegate
         {
@@ -208,7 +196,7 @@ public class EventScripts
     public static NodeEvent skeletonPuzzzle2()
     {
         GameController cont = GameController.instance;
-        NodeEvent e = new NodeEvent();
+        NodeEvent e = new NodeEvent("skeleton2");
         e.status = NodeEvent.EventStatus.Incomplete;
 
 
@@ -234,6 +222,172 @@ public class EventScripts
                 }
             });
 
+
+        });
+
+        return e;
+    }
+
+    public static NodeEvent crowbarPuzzle1()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("crowbar1");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.onInit += () =>
+        {
+            e.node.room.description = "You notice a large lever in the the room.";
+        };
+
+        //What happens when you succeed
+        e.successDelegate += () =>
+        {
+            e.node.room.unlockRoom();
+            cont.message("The gates surrounding the room open once more!");
+            cont.changeObjective("Exit to the next floor.");
+            GameController.StopListening(e.successTrigger, e.successListener);
+        };
+
+        //What happens when you fail
+        e.failureDelegate += () =>
+        {
+            GameController.instance.message("You drown in the room...");
+            GameController.StopListening(e.failureTrigger, e.failureListener);
+        };
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You notice a lever in the side of the room.");
+
+            e.addAction("pull lever", delegate
+            {
+                if (cont.roomNavigation.currentNode == e.node)
+                {
+                    cont.message("You pull the lever");
+                    cont.message("The lever handle breaks as you pull it all the way down.");
+                    e.node.room.description = "You notice a large broken lever in the the room.";
+                    e.node.room.lockRoom();
+                    cont.message("You notice water seeping out from the sides, and the gates surrounding the room lock.");
+                    cont.changeObjective("Escape the room.");
+
+                    e.removeAction("pull lever");
+
+                    int counter = 0;
+                    e.addAction("any", delegate
+                    {
+                        counter++;
+                        switch (counter)
+                        {
+                            case 0:
+                                cont.message("The water level is currently at your shoes.");
+                                break;
+                            case 1:
+                                cont.message("The water level is currently at your knees.");
+                                break;
+                            case 2:
+                                cont.message("The water level is currently at your hips. You begin to panic.");
+                                break;
+                            case 3:
+                                cont.message("The water level is currently at your torso. This is not looking too good...");
+                                break;
+                            case 4:
+                                cont.message("The water level is currently at your shoulders. It seems the end is nigh...");
+                                break;
+                            case 5:
+                                cont.message("The water level is currently above your head. You struggle to breathe. You see a faint light...");
+                                GameController.TriggerEvent(e.failureTrigger);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    e.addAction("pull lever", delegate
+                    {
+                        if (e.node == cont.roomNavigation.currentNode)
+                        {
+                            cont.message("The lever handle is broken...");
+                        }
+                    });
+
+                    e.node.room.addRoomEvent(crowbarPuzzle3(e));
+
+                }
+            });
+
+        });
+
+        return e;
+    }
+
+    public static NodeEvent crowbarPuzzle2()
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("crowbar2");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You feel a crowbar at your feet");
+
+            e.addAction("take crowbar", delegate
+            {
+                if (e.node == cont.roomNavigation.currentNode)
+                {
+                    cont.message("You take the crowbar");
+                    cont.playerInfo.addInventory("crowbar");
+                    e.removeAction("take crowbar");
+                    GameController.TriggerEvent(e.successTrigger);
+                }
+            });
+
+        });
+
+        return e;
+    }
+
+    public static NodeEvent crowbarPuzzle3(NodeEvent e1)
+    {
+        GameController cont = GameController.instance;
+        NodeEvent e = new NodeEvent("crowbar3");
+        e.status = NodeEvent.EventStatus.Incomplete;
+
+        e.setupEnterAction(delegate
+        {
+            GameController.instance.message("You see a drainpipe blocked by a large steel beam");
+
+            e.addAction("examine drainpipe", delegate
+            {
+                if (e.node == cont.roomNavigation.currentNode)
+                {
+                    cont.message("You see a drainpipe blocked by a large steel beam");
+
+                    if (cont.playerInfo.hasItem("crowbar") == false)
+                    {
+                        cont.message("You dont seem to be able to move the steel beam without some assistance.");
+                    }
+                    else
+                    {
+                        cont.message("Maybe you can move the steel beam somehow.");
+                    }
+                }
+            });
+
+            e.addAction("use crowbar", delegate
+            {
+                if (e.node == cont.roomNavigation.currentNode)
+                {
+                    if (cont.playerInfo.hasItem("crowbar"))
+                    {
+                        cont.message("You attempt to move the large steel beam away from the drainpipe with the crowbar");
+                        cont.message("With your strength,the beam is now open for water to flow.");
+                        cont.message("All of the water in the room flows into the pipe, and the crowbar along with it.");
+                        cont.playerInfo.removeInventory("crowbar");
+                        GameController.TriggerEvent(e1.successTrigger);
+                        GameController.TriggerEvent(e.successTrigger);
+                    }
+                }
+            });
 
         });
 

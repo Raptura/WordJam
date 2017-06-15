@@ -19,18 +19,19 @@ public class NodeEvent
     [HideInInspector]
     public EventStatus status;
 
-    public delegate void OnSuccess();
-    public delegate void OnFailure();
     public delegate void Action();
 
-    public OnSuccess successDelegate;
-    public OnFailure failureDelegate;
+    public UnityAction successDelegate;
+    public UnityAction failureDelegate;
+    public UnityAction onInit;
 
     private Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
     public UnityAction successListener;
     public UnityAction failureListener;
     public UnityAction enterListener;
+
+    public string successTrigger, failureTrigger;
 
     public string description;
 
@@ -86,10 +87,16 @@ public class NodeEvent
         }
     }
 
-    public NodeEvent()
+    public NodeEvent(string name)
     {
+        successTrigger = name + "success";
+        failureTrigger = name + "fail";
         successListener = new UnityAction(Succeed);
         failureListener = new UnityAction(Fail);
+
+        successDelegate = delegate { };
+        failureDelegate = delegate { };
+        onInit = delegate { };
 
         node = new MapNode(-1, -1);
         node.room = new MapRoom();
@@ -111,6 +118,9 @@ public class NodeEvent
 
     public void Flush()
     {
+        GameController.StopListening(successTrigger, successListener);
+        GameController.StopListening(failureTrigger, failureListener);
+
         List<string> acKeys = new List<string>();
         foreach (string key in actions.Keys)
         {
@@ -125,11 +135,17 @@ public class NodeEvent
 
     public void Init()
     {
+        GameController.StartListening(successTrigger, successListener);
+        GameController.StartListening(failureTrigger, failureListener);
+
         GameController.StartListening("enter node " + "(" + node.posX + "," + node.posY + ")", enterListener);
+
         foreach (string key in actions.Keys)
         {
             GameController.StartListening(key, invokeAction);
         }
+        onInit.Invoke();
+
         initialized = true;
     }
 }

@@ -33,7 +33,7 @@ public class MapRoom
             }
         }
 
-        Debug.Log("Room Created at (" + posX + "," + posY + ")");
+        //Debug.Log("Room Created at (" + posX + "," + posY + ")");
     }
 
     public void SetupRoom(int x, int y, int width, int height, Corridor corridor)
@@ -91,29 +91,35 @@ public class MapRoom
             }
         }
 
-        Debug.Log("Room Created at (" + posX + "," + posY + ")");
+        //Debug.Log("Room Created at (" + posX + "," + posY + ")");
     }
 
     public void lockRoom()
     {
         foreach (MapNode node in roomnodes)
         {
-
             if (node.exits.Contains(MapNode.Direction.North))
-                if (gen.nodes[node.posX, posY + 1].room != this)
+            {
+                if (Equals(this, gen.nodes[node.posX, node.posY + 1].room) == false)
                     node.blockedExits.Add(MapNode.Direction.North);
+            }
 
             if (node.exits.Contains(MapNode.Direction.East))
-                if (gen.nodes[node.posX + 1, posY].room != this)
+            {
+                if (Equals(this, gen.nodes[node.posX + 1, node.posY].room) == false)
                     node.blockedExits.Add(MapNode.Direction.East);
+            }
 
             if (node.exits.Contains(MapNode.Direction.South))
-                if (gen.nodes[node.posX, posY - 1].room != this)
+            {
+                if (Equals(this, gen.nodes[node.posX, node.posY - 1].room) == false)
                     node.blockedExits.Add(MapNode.Direction.South);
-
+            }
             if (node.exits.Contains(MapNode.Direction.West))
-                if (gen.nodes[node.posX - 1, posY].room != this)
+            {
+                if (Equals(this, gen.nodes[node.posX - 1, node.posY].room) == false)
                     node.blockedExits.Add(MapNode.Direction.West);
+            }
         }
     }
 
@@ -135,5 +141,14 @@ public class MapRoom
             e.node = roomnodes[randX, randY];
             e.Init();
         }
+    }
+
+    public void addRoomEvent(NodeEvent e)
+    {
+        int randX = UnityEngine.Random.Range(0, roomnodes.GetLength(0));
+        int randY = UnityEngine.Random.Range(0, roomnodes.GetLength(1));
+
+        e.node = roomnodes[randX, randY];
+        e.Init();
     }
 }

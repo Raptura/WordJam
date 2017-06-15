@@ -118,7 +118,13 @@ public class GameController : MonoBehaviour
 
             thisEvent.Invoke();
 
+            if (instance.eventDictionary.TryGetValue("any", out thisEvent))
+            {
+                thisEvent.Invoke();
+            }
+
         }
+
     }
 
     /// <summary>

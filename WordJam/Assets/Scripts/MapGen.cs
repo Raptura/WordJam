@@ -261,6 +261,7 @@ public class MapGen : MonoBehaviour
             }
         }
         node.setNodeSprites();
+        node.room = room;
         GameObject newNode = new GameObject("Node");
         MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
         comp.nodeData = node;
@@ -303,7 +304,7 @@ public class MapGen : MonoBehaviour
         }
 
         node.setNodeSprites();
-
+        node.room = null;
         GameObject newNode = new GameObject("Node");
         MapNodeComp comp = newNode.AddComponent<MapNodeComp>();
         comp.nodeData = node;
@@ -361,7 +362,8 @@ public class MapGen : MonoBehaviour
         }
         else
         {
-
+            rooms[0].events.Add(EventScripts.crowbarPuzzle1());
+            rooms[0].events.Add(EventScripts.crowbarPuzzle2());
         }
 
         rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor());
