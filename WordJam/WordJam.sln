@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordJam.CSharp", "WordJam.CSharp.csproj", "{5D8187D4-3BDB-6EE9-8568-7C54EE948630}"
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordJam", "WordJam.csproj", "{53E33BC2-F674-DD07-5C0C-41B0D2EBF8D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5D8187D4-3BDB-6EE9-8568-7C54EE948630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D8187D4-3BDB-6EE9-8568-7C54EE948630}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D8187D4-3BDB-6EE9-8568-7C54EE948630}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D8187D4-3BDB-6EE9-8568-7C54EE948630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E33BC2-F674-DD07-5C0C-41B0D2EBF8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E33BC2-F674-DD07-5C0C-41B0D2EBF8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E33BC2-F674-DD07-5C0C-41B0D2EBF8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E33BC2-F674-DD07-5C0C-41B0D2EBF8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

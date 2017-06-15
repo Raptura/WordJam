@@ -27,7 +27,6 @@ public class NodeEvent
     public OnFailure failureDelegate;
 
     private Dictionary<string, Action> actions = new Dictionary<string, Action>();
-    private Dictionary<string, UnityAction> uActions = new Dictionary<string, UnityAction>();
 
     public UnityAction successListener;
     public UnityAction failureListener;
@@ -35,14 +34,15 @@ public class NodeEvent
 
     public string description;
 
+    private bool initialized = false;
+
     public void addAction(string key, Action ac)
     {
         if (actions.ContainsKey(key) == false)
         {
             actions.Add(key, ac);
-            UnityAction newActionListener = new UnityAction(invokeAction);
-            uActions.Add(key, newActionListener);
-            GameController.StartListening(key, newActionListener);
+            if (initialized)
+                GameController.StartListening(key, invokeAction);
         }
     }
 
@@ -50,9 +50,8 @@ public class NodeEvent
     {
         if (actions.ContainsKey(key))
         {
-            GameController.StopListening(key, uActions[key]);
+            GameController.StopListening(key, invokeAction);
             actions.Remove(key);
-            uActions.Remove(key);
         }
         else
         {
@@ -77,7 +76,7 @@ public class NodeEvent
         }
     }
 
-    public void Fail()
+    void Fail()
     {
 
         if (status == EventStatus.Incomplete)
@@ -91,12 +90,15 @@ public class NodeEvent
     {
         successListener = new UnityAction(Succeed);
         failureListener = new UnityAction(Fail);
+
+        node = new MapNode(-1, -1);
+        node.room = new MapRoom();
+        initialized = false;
     }
 
     public void setupEnterAction(Action ac)
     {
         enterListener = new UnityAction(ac);
-        GameController.StartListening("enter node " + "(" + node.posX + "," + node.posY + ")", enterListener);
     }
 
     public void removeEnterAction()
@@ -119,5 +121,15 @@ public class NodeEvent
             removeAction(key);
         }
         removeEnterAction();
+    }
+
+    public void Init()
+    {
+        GameController.StartListening("enter node " + "(" + node.posX + "," + node.posY + ")", enterListener);
+        foreach (string key in actions.Keys)
+        {
+            GameController.StartListening(key, invokeAction);
+        }
+        initialized = true;
     }
 }

@@ -34,11 +34,14 @@ public class RoomNavigation : MonoBehaviour
         playerBlip.AddComponent<SpriteRenderer>().sprite = mapGen.playerSprite;
         cam.target = playerBlip.transform;
         GameController.instance.changeFloor(1);
+        GameController.TriggerEvent("enter node " + "(" + currentNode.posX + "," + currentNode.posY + ")");
+        traversedNodes.Add(currentNode);
+        controller.DisplayLoggedText();
     }
 
     void Awake()
     {
-        controller = GetComponent<GameController>();
+        controller = GameController.instance;
         controller.roomNavigation = this;
     }
 

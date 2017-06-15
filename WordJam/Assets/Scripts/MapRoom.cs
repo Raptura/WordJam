@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -95,29 +96,23 @@ public class MapRoom
 
     public void lockRoom()
     {
-        List<MapNode> roomsToList = new List<MapNode>();
-        foreach (MapNode node in roomnodes)
-        {
-            roomsToList.Add(node);
-        }
-
         foreach (MapNode node in roomnodes)
         {
 
             if (node.exits.Contains(MapNode.Direction.North))
-                if (roomsToList.Contains(gen.nodes[node.posX, posY + 1]) == false)
+                if (gen.nodes[node.posX, posY + 1].room != this)
                     node.blockedExits.Add(MapNode.Direction.North);
 
             if (node.exits.Contains(MapNode.Direction.East))
-                if (roomsToList.Contains(gen.nodes[node.posX + 1, posY]) == false)
+                if (gen.nodes[node.posX + 1, posY].room != this)
                     node.blockedExits.Add(MapNode.Direction.East);
 
             if (node.exits.Contains(MapNode.Direction.South))
-                if (roomsToList.Contains(gen.nodes[node.posX, posY - 1]) == false)
+                if (gen.nodes[node.posX, posY - 1].room != this)
                     node.blockedExits.Add(MapNode.Direction.South);
 
             if (node.exits.Contains(MapNode.Direction.West))
-                if (roomsToList.Contains(gen.nodes[node.posX - 1, posY]) == false)
+                if (gen.nodes[node.posX - 1, posY].room != this)
                     node.blockedExits.Add(MapNode.Direction.West);
         }
     }
@@ -127,6 +122,18 @@ public class MapRoom
         foreach (MapNode node in roomnodes)
         {
             node.blockedExits.Clear();
+        }
+    }
+
+    public void assignRandomEvents()
+    {
+        foreach (NodeEvent e in events)
+        {
+            int randX = UnityEngine.Random.Range(0, roomnodes.GetLength(0));
+            int randY = UnityEngine.Random.Range(0, roomnodes.GetLength(1));
+
+            e.node = roomnodes[randX, randY];
+            e.Init();
         }
     }
 }

@@ -348,25 +348,26 @@ public class MapGen : MonoBehaviour
 
     void AssignRoomEvents()
     {
+
         if (floorNum == 1)
         {
-            rooms[0].events.Add(EventScripts.firstFall(rooms[0].roomnodes[0, 0]));
-            rooms[1].events.Add(EventScripts.exitFloor(rooms[1].roomnodes[0, 0]));
+            rooms[0].events.Add(EventScripts.firstFall());
+            rooms[1].events.Add(EventScripts.exitFloor());
         }
         else if (floorNum == 2)
         {
-            rooms[0].events.Add(EventScripts.skeletonPuzzzle1(rooms[0].roomnodes[0, 0]));
-
-            int randX = Random.Range(0, rooms[0].roomnodes.GetLength(0));
-            int randY = Random.Range(0, rooms[0].roomnodes.GetLength(1));
-
-            rooms[0].events.Add(EventScripts.skeletonPuzzzle2(rooms[0].roomnodes[randX, randY]));
-
-            rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor(rooms[rooms.Length - 1].roomnodes[0, 0]));
+            rooms[0].events.Add(EventScripts.skeletonPuzzzle1());
+            rooms[0].events.Add(EventScripts.skeletonPuzzzle2());
         }
         else
         {
-            rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor(rooms[rooms.Length - 1].roomnodes[0, 0]));
+
+        }
+
+        rooms[rooms.Length - 1].events.Add(EventScripts.exitFloor());
+        foreach (MapRoom room in rooms)
+        {
+            room.assignRandomEvents();
         }
     }
 
