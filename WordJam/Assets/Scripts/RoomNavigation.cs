@@ -17,7 +17,14 @@ public class RoomNavigation : MonoBehaviour
 
     public void describeRoom()
     {
-        GameController.instance.message(currentNode.room.description);
+        if (currentNode.room != null)
+        {
+            GameController.instance.message(currentNode.room.description);
+        }
+        else
+        {
+            GameController.instance.message("This is an extremely dark corridor...");
+        }
     }
 
     void Start()

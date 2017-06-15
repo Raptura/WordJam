@@ -7,7 +7,7 @@ public class LookAround : InputAction
 {
     public override void RespondToInput(string[] separatedInputWords)
     {
-        if (separatedInputWords[1] == "around")
+        if (separatedInputWords[1] == "around" || separatedInputWords[1] == "room")
         {
             GameController.instance.message("You look around the room");
             GameController.instance.roomNavigation.describeRoom();
@@ -16,9 +16,12 @@ public class LookAround : InputAction
             if (GameController.instance.playerInfo.hasItem("torch"))
             {
                 MapNode currNode = GameController.instance.roomNavigation.currentNode;
-                foreach (MapNode node in currNode.room.roomnodes)
+                if (currNode.room != null)
                 {
-                    node.hidden = false;
+                    foreach (MapNode node in currNode.room.roomnodes)
+                    {
+                        node.hidden = false;
+                    }
                 }
             }
         }

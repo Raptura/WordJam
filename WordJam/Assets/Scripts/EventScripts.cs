@@ -225,6 +225,8 @@ public class EventScripts
                         cont.playerInfo.removeInventory("skull");
                         cont.message("You place the skull on the table and complete the skeleton.");
                         cont.message("The ground rumbles beneath you. You see a stone slab in the distance move, revealing a stairway.");
+
+                        node.room.description = "You see a stone table in the room. On top of this table is a fully built skeleton.";
                         e.removeAction("place skull on table");
                         node.room.unlockRoom();
                         e.removeEnterAction();
