@@ -8,6 +8,7 @@ public class MapRoom
     public MapGen gen;
     public MapNode[,] roomnodes;
     public List<NodeEvent> events = new List<NodeEvent>();
+    public int roomNum = -1;
     //Node information for Map
 
     public int posX, posY;

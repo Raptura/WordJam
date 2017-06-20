@@ -85,6 +85,8 @@ public class MapGen : MonoBehaviour
                 rooms[i] = new MapRoom();
                 corridors[i] = new Corridor();
 
+                rooms[i].roomNum = i;
+
                 int x = mapData.xBounds / 2;
                 int y = mapData.yBounds / 2;
 
@@ -114,7 +116,7 @@ public class MapGen : MonoBehaviour
                 else
                 {
                     rooms[i] = new MapRoom();
-
+                    rooms[i].roomNum = i;
 
                     //Base X and Y on the last corridor
                     int x = 0;

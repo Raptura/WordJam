@@ -210,32 +210,35 @@ public class EventScripts
             e.node.room.addRoomEvent(skeletonPuzzzleTable());
         };
 
+        e.setupEnterRoomAction(delegate
+        {
+            e.node.room.lockRoom();
+            GameController.instance.message("You hear a door lock in the distance...");
+            cont.changeObjective("Escape the room.");
+            e.removeEnterRoomAction();
+        });
+
         e.setupEnterAction(delegate
         {
 
             e.node.room.description = "You see a stone table in the room. On top of this table is a skeleton. It's missing its head";
 
-            if (cont.roomNavigation.traversedNodes.Contains(e.node) == false)
-            {
-                e.node.room.lockRoom();
-                GameController.instance.message("You hear a door lock in the distance...");
-                cont.changeObjective("Escape the room.");
-            }
             GameController.instance.message("You notice that there's a human skull on the ground.");
 
-            e.addAction("take skull", delegate
+        });
+
+
+        e.addAction("take skull", delegate
+        {
+            if (cont.roomNavigation.currentNode == e.node)
             {
-                if (cont.roomNavigation.currentNode == e.node)
-                {
-                    string examine = "The skull is weathered and bare. It fits neatly in your hand. You'd do a hamlet reenaction but you wonder where its other boney companions are.";
-                    cont.playerInfo.addInventory("skull", examineText: examine);
-                    cont.message("You take the skull");
+                string examine = "The skull is weathered and bare. It fits neatly in your hand. You'd do a hamlet reenaction but you wonder where its other boney companions are.";
+                cont.playerInfo.addInventory("skull", examineText: examine);
+                cont.message("You take the skull");
 
-                    e.removeAction("take skull");
-                    e.removeEnterAction();
-                }
-            });
-
+                e.removeAction("take skull");
+                e.removeEnterAction();
+            }
         });
 
         return e;
@@ -477,8 +480,6 @@ public class EventScripts
             if (cont.roomNavigation.currentNode == e.node)
             {
                 cont.message("Just a painted circle. You're more interested in the holes, though.");
-
-                e.removeEnterAction();
             }
         });
 
@@ -500,7 +501,7 @@ public class EventScripts
                     cont.playerInfo.removeInventory("green stone");
                     cont.message("You put the green stone in the right hole.");
 
-                    e.removeAction("place green stone in right hole");
+                    e.removeAction("place green stone isn right hole");
                 }
             }
         });
@@ -689,15 +690,15 @@ public class EventScripts
                 e.removeAction("take page");
                 e.removeEnterAction();
 
-                e.node.room.description = "You see a skeleton resting against a wall.";
+                //e.node.room.description = "You see a skeleton resting against a wall.";
 
-                e.addAction("look skeleton", delegate
-                {
-                    if (cont.roomNavigation.currentNode == e.node)
-                    {
-                        cont.message("The skeleton is indeed dry.");
-                    }
-                });
+                //e.addAction("look skeleton", delegate
+                //{
+                //    if (cont.roomNavigation.currentNode == e.node)
+                //    {
+                //        cont.message("The skeleton is indeed dry.");
+                //    }
+                //});
             }
         });
 

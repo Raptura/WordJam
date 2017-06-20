@@ -30,6 +30,7 @@ public class NodeEvent
     public UnityAction successListener;
     public UnityAction failureListener;
     public UnityAction enterListener;
+    public UnityAction enterRoomListener;
 
     public string successTrigger, failureTrigger;
 
@@ -107,6 +108,9 @@ public class NodeEvent
         node = new MapNode(-1, -1);
         node.room = new MapRoom();
         initialized = false;
+
+        setupEnterAction(delegate { });
+        setupEnterRoomAction(delegate { });
     }
 
     public void setupEnterAction(Action ac)
@@ -114,11 +118,24 @@ public class NodeEvent
         enterListener = new UnityAction(ac);
     }
 
+    public void setupEnterRoomAction(Action ac)
+    {
+        enterRoomListener = new UnityAction(ac);
+    }
+
     public void removeEnterAction()
     {
         if (enterListener != null)
         {
             GameController.StopListening("enter node " + "(" + node.posX + "," + node.posY + ")", enterListener);
+        }
+    }
+
+    public void removeEnterRoomAction()
+    {
+        if (enterRoomListener != null)
+        {
+            GameController.StopListening("enter room " + "(" + node.room.roomNum + ")", enterRoomListener);
         }
     }
 
@@ -137,6 +154,7 @@ public class NodeEvent
             removeAction(key);
         }
         removeEnterAction();
+        removeEnterRoomAction();
     }
 
     public void Init()
@@ -145,6 +163,7 @@ public class NodeEvent
         GameController.StartListening(failureTrigger, failureListener);
 
         GameController.StartListening("enter node " + "(" + node.posX + "," + node.posY + ")", enterListener);
+        GameController.StartListening("enter room " + "(" + node.room.roomNum + ")", enterRoomListener);
 
         foreach (string key in actions.Keys)
         {

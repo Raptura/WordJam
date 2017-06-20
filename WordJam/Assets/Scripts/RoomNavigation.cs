@@ -35,6 +35,8 @@ public class RoomNavigation : MonoBehaviour
         cam.target = playerBlip.transform;
         GameController.instance.changeFloor(1);
         GameController.TriggerEvent("enter node " + "(" + currentNode.posX + "," + currentNode.posY + ")");
+        if (currentNode.room != null)
+            GameController.TriggerEvent("enter room " + "(" + currentNode.room.roomNum + ")");
         traversedNodes.Add(currentNode);
         controller.DisplayLoggedText();
     }
@@ -85,6 +87,10 @@ public class RoomNavigation : MonoBehaviour
 
             controller.message("You move " + directionNoun);
             GameController.TriggerEvent("enter node " + "(" + x + "," + y + ")");
+
+            if (currentNode.room != null)
+                GameController.TriggerEvent("enter room " + "(" + currentNode.room.roomNum + ")");
+
             traversedNodes.Add(currentNode);
         }
         else if (currentNode.blockedExits.Contains(dir))
@@ -134,7 +140,9 @@ public class RoomNavigation : MonoBehaviour
         mapGen.SwitchFloors(mapGen.floorNum + 1);
 
         GameController.TriggerEvent("enter node " + "(" + currentNode.posX + "," + currentNode.posY + ")");
+        GameController.TriggerEvent("enter room " + "(" + currentNode.room.roomNum + ")");
         traversedNodes.Add(currentNode);
+        currentNode.hidden = false;
     }
 
 }

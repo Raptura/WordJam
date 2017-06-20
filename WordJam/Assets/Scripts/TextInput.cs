@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,14 +23,25 @@ public class TextInput : MonoBehaviour
         controller.message(">> " + userInput);
 
         char[] delimiterCharacters = { ' ' };
-        string[] separatedInputWords = userInput.Split(delimiterCharacters);
+
+        string[] ignoreWords = {
+            "the", "a", "an"
+        };
+
+        string[] words = userInput.Split(delimiterCharacters);
+        List<string> parsedWords = new List<string>(words);
+        foreach (string s in ignoreWords)
+        {
+            parsedWords.Remove(s);
+        }
+
 
         for (int i = 0; i < controller.inputActions.Length; i++)
         {
             InputAction inputAction = controller.inputActions[i];
-            if (inputAction.hasKeyword(separatedInputWords[0]))
+            if (inputAction.hasKeyword(parsedWords[0]))
             {
-                inputAction.invokeInputAction(separatedInputWords);
+                inputAction.invokeInputAction(parsedWords.ToArray());
             }
         }
         InputComplete();
